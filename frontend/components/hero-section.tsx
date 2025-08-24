@@ -9,9 +9,9 @@ const HeroSection = () => {
         <BackgroundLines className="flex flex-col items-center mt-6 lg:mt-20" >
             <div className="text-5xl sm:text-6xl lg:text-7xl text-center tracking-wide flex flex-col gap-2">
                 <h1 className="font-mono">
-                    CodeSnipVault
+                    CodeSnip Vault
                 </h1>
-                <span className="text-3xl bg-gradient-to-r from-blue-500 to-purple-600 text-transparent bg-clip-text">
+                <span className="md:text-3xl text-2xl bg-gradient-to-r from-blue-500 to-purple-600 text-transparent bg-clip-text">
                     your code, organized
                 </span>
             <p className="mt-5 text-lg text-center text-neutral-500 max-w-4xl">
