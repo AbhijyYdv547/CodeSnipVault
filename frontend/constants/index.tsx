@@ -16,10 +16,10 @@ import {
 } from "lucide-react";
 
 export const navItems = [
+  { name: "About", link: "#about" },
   { name: "Features", link: "#features" },
-  { name: "Templates", link: "#templates" },
-  { name: "FAQ", link: "#faq" },
-  { name: "Contact", link: "#contact" },
+  { name: "Workflow", link: "#workflow" },
+  { name: "Demo", link: "#demo" },
 ];
 
 export const features = [
