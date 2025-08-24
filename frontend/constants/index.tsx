@@ -140,3 +140,44 @@ export const socialMedia = [
     icon: <BookText />,
   },
 ];
+
+
+import { AlertCircle, FileMinus, Share2, Search } from "lucide-react";
+
+export const problems = [
+  {
+    title: "Losing track of useful code snippets",
+    icon: <AlertCircle />,
+  },
+  {
+    title: "Difficulty organizing snippets by language or type",
+    icon: <FileMinus />,
+  },
+  {
+    title: "Sharing snippets with teammates is cumbersome",
+    icon: <Share2 />,
+  },
+  {
+    title: "Finding old snippets quickly is hard",
+    icon: <Search />,
+  },
+];
+
+export const solutions = [
+  {
+    title: "Centralized vault to store all your code snippets",
+    icon: <AlertCircle />,
+  },
+  {
+    title: "Organize snippets with language and type tags",
+    icon: <FileMinus />,
+  },
+  {
+    title: "Share snippets via unique public links effortlessly",
+    icon: <Share2 />,
+  },
+  {
+    title: "Search and filter snippets instantly",
+    icon: <Search />,
+  },
+];

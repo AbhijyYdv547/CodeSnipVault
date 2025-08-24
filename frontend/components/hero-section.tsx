@@ -6,7 +6,7 @@ import { Button } from "./ui/button";
 const HeroSection = () => {
     const router = useRouter()
     return (
-        <BackgroundLines className="flex flex-col items-center mt-6 lg:mt-20 h-full" >
+        <BackgroundLines className="flex flex-col items-center mt-6 lg:mt-20" >
             <div className="text-5xl sm:text-6xl lg:text-7xl text-center tracking-wide flex flex-col gap-2">
                 <h1 className="font-mono">
                     CodeSnipVault
@@ -19,13 +19,34 @@ const HeroSection = () => {
                 developer-friendly vault built for productivity and collaboration.
             </p>
             </div>
-            <div className="flex justify-center my-10 md:gap-8 gap-2 ">
+            <div className="flex justify-center mt-10 md:gap-8 gap-2 ">
                 <Button className="px-16 py-8 relative cursor-pointer text-lg" variant="outline" size="lg" onClick={() => router.push("/signup")}>
                         Sign up
                 </Button>
                 <Button className="px-16 py-8 relative cursor-pointer text-lg" variant="default" size="lg" onClick={() => router.push("/login")}>
                         Login
                 </Button>
+            </div>
+
+            <div className="flex mt-10 justify-center">
+                <video
+                    autoPlay
+                    loop
+                    muted
+                    className="rounded-lg w-1/2 border border-blue-500 shadow-sm shadow-blue-400 mx-2 my-4"
+                >
+                    <source src="/videos/video1.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                </video>
+                <video
+                    autoPlay
+                    loop
+                    muted
+                    className="rounded-lg w-1/2 border border-blue-500 shadow-sm shadow-blue-400 mx-2 my-4"
+                >
+                    <source src="/videos/video2.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                </video>
             </div>
 
         </BackgroundLines>
