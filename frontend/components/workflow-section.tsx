@@ -21,10 +21,9 @@ const Workflow = () => {
             </div>
 
 
-            <div className="mt-16 flex flex-col items-center gap-12 px-6 sm:px-12 max-w-7xl mx-auto">
-
-                <div className="flex-1 flex justify-center">
-                    <div className="rounded-lg border border-zinc-500 shadow-sm shadow-zinc-400 overflow-hidden">
+            <div className="flex flex-col mt-10 justify-center items-center">
+                <div className="rounded-lg w-3/4 border border-zinc-500 shadow-sm shadow-zinc-400 mx-2 my-4 overflow-hidden">
+                    <div className="relative w-full">
                         <Image
                             src="/mermaid-chart.png"
                             alt="Workflow"
@@ -34,8 +33,6 @@ const Workflow = () => {
                         />
                     </div>
                 </div>
-
-
             </div>
             <WorkflowBox/>
         </section>
