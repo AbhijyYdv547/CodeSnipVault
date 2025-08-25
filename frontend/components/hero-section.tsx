@@ -6,10 +6,10 @@ import { Button } from "./ui/button";
 const HeroSection = () => {
     const router = useRouter()
     return (
-        <BackgroundLines className="flex flex-col items-center mt-6 lg:mt-20" >
-            <div className="text-5xl sm:text-6xl lg:text-7xl text-center tracking-wide flex flex-col gap-2">
+        <div className="flex flex-col items-center mt-6 lg:mt-20" >
+            <div className="text-4xl sm:text-6xl lg:text-7xl text-center tracking-wide flex flex-col gap-2">
                 <h1 className="font-mono">
-                    CodeSnip Vault
+                    CodeSnipVault
                 </h1>
                 <span className="md:text-3xl text-2xl bg-gradient-to-r from-blue-500 to-purple-600 text-transparent bg-clip-text">
                     your code, organized
@@ -19,16 +19,22 @@ const HeroSection = () => {
                 developer-friendly vault built for productivity and collaboration.
             </p>
             </div>
-            <div className="flex justify-center mt-10 md:gap-8 gap-2 ">
-                <Button className="px-16 py-8 relative cursor-pointer text-lg" variant="outline" size="lg" onClick={() => router.push("/signup")}>
+            <div className="flex justify-center my-10 md:gap-8 gap-2">
+                <button className="p-1 relative cursor-pointer" onClick={() => router.push("/signup")}>
+                    <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg" />
+                    <div className="px-8 py-2  bg-zinc-900 rounded-[6px]  relative group transition duration-200 text-white hover:bg-transparent">
                         Sign up
-                </Button>
-                <Button className="px-16 py-8 relative cursor-pointer text-lg" variant="default" size="lg" onClick={() => router.push("/login")}>
+                    </div>
+                </button>
+                <button className="p-1 relative cursor-pointer" onClick={() => router.push("/login")}>
+                    <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg" />
+                    <div className="px-8 py-2  bg-zinc-900 rounded-[6px]  relative group transition duration-200 text-white hover:bg-transparent">
                         Login
-                </Button>
+                    </div>
+                </button>
             </div>
 
-            <div className="flex mt-10 justify-center">
+            <div className="md:flex mt-10 justify-center hidden">
                 <video
                     autoPlay
                     loop
@@ -49,8 +55,8 @@ const HeroSection = () => {
                 </video>
             </div>
 
-        </BackgroundLines>
-    );
+        </div>
+   );
 };
 
 export default HeroSection;

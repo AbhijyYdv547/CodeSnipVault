@@ -16,11 +16,11 @@ const AboutSection = () => {
                 transition={{ duration: 0.6 }}
                 viewport={{ once: true }}
             >
-                <span className="uppercase text-xs tracking-widest text-blue-500 font-semibold">
+                <span className="uppercase text-xs tracking-widest text-zinc-500 font-semibold">
                     Problems & Solutions
                 </span>
                 <h2 className="text-3xl sm:text-5xl font-bold tracking-tight">
-                    From <span className="text-blue-500">Scattered Snippets</span> to Organized Vaults
+                    From <span className="text-zinc-500">Scattered Snippets</span> to Organized Vaults
                 </h2>
                 <p className="text-muted-foreground max-w-xl mx-auto text-base sm:text-lg">
                     Don&apos;t struggle just do CodeSnip Vault
@@ -28,7 +28,7 @@ const AboutSection = () => {
             </motion.div>
 
 
-            <div className="flex md:flex-row flex-col justify-between">
+            <div className="flex md:flex-row flex-col gap-5">
                 <div className="shadow-input mx-auto w-full max-w-md p-4 rounded-2xl md:p-8 bg-zinc-900">
                     <div className="flex items-center mb-2">
                         <div className="flex-1 text-center">
