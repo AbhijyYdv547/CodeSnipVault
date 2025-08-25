@@ -6,8 +6,18 @@ const DemoSection = () => {
             id="demo"
             className="py-24 bg-background text-foreground border-b border-border"
         >
+            <div className="text-center space-y-4 px-4">
+                <h2 className="text-3xl sm:text-5xl font-bold tracking-tight">
+                    Demo Video{" "}
+                    <span className="text-zinc-500">for CodeSnipVault</span>
+                </h2>
+                <p className="text-muted-foreground max-w-2xl mx-auto text-base sm:text-lg">
+                    A quick look at how CodeSnipVault helps you save, organize, and share your code snippets effortlessly.
+                </p>
+            </div>
+
             <div className="flex flex-col mt-10 justify-center items-center">
-                <div className="rounded-lg w-3/4 border border-blue-500 shadow-sm shadow-blue-400 mx-2 my-4 overflow-hidden">
+                <div className="rounded-lg w-3/4 border border-zinc-500 shadow-sm shadow-zinc-400 mx-2 my-4 overflow-hidden">
                     <div className="relative w-full pb-[56.25%]"> {/* 16:9 aspect ratio */}
                         <iframe
                             className="absolute top-0 left-0 w-full h-full"

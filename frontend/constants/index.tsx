@@ -1,19 +1,11 @@
 import {
   FileText,
-  UserPlus,
   LayoutDashboard,
-  Eye,
-  Download,
-  Database,
-  Headset,
-  CheckCircle,
-  HelpCircle,
-  ShieldCheck,
-  BookText,
-  BriefcaseBusiness,
-  GitBranch,
-  MessageCircleDashed,
+  Layers,
+  AlertCircle, FileMinus, Share2, Search,
+  Code2, Shield, Cloud, Tags, Users
 } from "lucide-react";
+
 
 export const navItems = [
   { name: "About", link: "#about" },
@@ -24,125 +16,78 @@ export const navItems = [
 
 export const features = [
   {
-    title: "Professional Resume Generation",
-    description: "Generate polished, job-ready resumes with minimal effort.",
-    icon: <FileText />,
+    title: "Centralized Snippet Storage",
+    description: "Save and organize all your code snippets in one secure vault.",
+    icon: <Code2 />,
   },
   {
-    title: "User Registration & Authentication",
-    description:
-      "Secure login and registration to manage your resumes anytime.",
-    icon: <UserPlus />,
+    title: "Powerful Search & Tags",
+    description: "Find snippets instantly with smart search and custom tagging.",
+    icon: <Search />,
   },
   {
-    title: "Intuitive Dashboard",
-    description: "Easily manage resume sections with a clean, modern UI.",
+    title: "Collaborative Sharing",
+    description: "Share snippets with your team or keep them private — your choice.",
+    icon: <Share2 />,
+  },
+  {
+    title: "Clean & Intuitive Dashboard",
+    description: "Manage your snippets with a distraction-free, modern UI.",
     icon: <LayoutDashboard />,
   },
   {
-    title: "Live Resume Preview",
-    description: "See real-time changes as you edit your resume content.",
-    icon: <Eye />,
+    title: "Secure Authentication",
+    description: "Protect your workspace with robust authentication and roles.",
+    icon: <Shield />,
   },
   {
-    title: "PDF Download Support",
-    description: "Download high-quality, professional resumes in PDF format.",
-    icon: <Download />,
+    title: "Cloud Sync",
+    description: "Access your snippets anywhere with seamless cloud backup.",
+    icon: <Cloud />,
   },
   {
-    title: "Built on MERN Stack",
-    description: "Fast and scalable with MongoDB, Express, React, and Node.",
-    icon: <Database />,
+    title: "Snippet Metadata",
+    description: "Attach tags, language, and context to every snippet for clarity.",
+    icon: <Tags />,
   },
   {
-    title: "24/7 Support",
-    description: "We're always available to help — AI and human support.",
-    icon: <Headset />,
-  },
-  {
-    title: "Job-Ready Assurance",
-    description: "We ensure your resume meets the latest hiring standards.",
-    icon: <CheckCircle />,
+    title: "Team Collaboration",
+    description: "Work together with real-time snippet updates and discussions.",
+    icon: <Users />,
   },
 ];
 
-export const templates = [
-  {
-    title: "Classic Template",
-    description:
-      "Traditional single-column format optimized for readability—best for academic, legal, or government jobs.",
-    link: "/classic.jpg",
-  },
-  {
-    title: "Compact Template",
-    description:
-      "Visually engaging with stylish fonts and layout—perfect for designers, marketers, and creative professionals.",
-    link: "/compact.jpg",
-  },
-  {
-    title: "Modern Template",
-    description:
-      "A clean, minimal layout with bold headings and subtle colors—ideal for corporate, tech, or finance roles.",
-    link: "/modern.jpg",
-  },
-];
 
-export const faqs = [
+export const workflowHighlights = [
   {
-    title: "Is the resume builder free to use?",
-    description:
-      "Yes! You can build and download your resume for free. No credit card required.",
-    icon: <HelpCircle />,
-  },
-  {
-    title: "Will my data be secure?",
-    description:
-      "We take privacy seriously. Your data is encrypted and never shared with third parties.",
-    icon: <ShieldCheck />,
-  },
-  {
-    title: "Can I download my resume as a PDF?",
-    description:
-      "Absolutely. You can export your resume anytime in a professional PDF format.",
-    icon: <Download />,
-  },
-  {
-    title: "Are the resume templates ATS-friendly?",
-    description:
-      "Yes, all our templates are designed to be Applicant Tracking System (ATS) compatible.",
+    index: 1,
+    title: "Instant Access",
+    description: "Quickly retrieve snippets with blazing-fast search and filtering.",
     icon: <FileText />,
   },
-];
-
-export const socialMedia = [
   {
-    id: 1,
-    link: "https://github.com/AbhijyYdv547",
-    title: "Github",
-    icon: <GitBranch />,
+    index: 2,
+    title: "Organized Workflow",
+    description: "Tag, categorize, and structure snippets for effortless navigation.",
+    icon: <Layers />,
   },
   {
-    id: 2,
-    link: "https://x.com/YadavAbhij50732",
-    title: "Twitter",
-    icon: <MessageCircleDashed />,
+    index: 3,
+    title: "Secure Vault",
+    description: "Snippets are stored safely with encryption and role-based access.",
+    icon: <Shield />,
   },
   {
-    id: 3,
-    link: "https://www.linkedin.com/in/abj-ydv",
-    title: "Linkedin",
-    icon: <BriefcaseBusiness />,
-  },
-  {
-    id: 4,
-    link: "https://dev.to/abhijay_yadav_712e10ab036",
-    title: "Dev.to",
-    icon: <BookText />,
+    index: 4,
+    title: "Team Collaboration",
+    description: "Share, comment, and collaborate on snippets in real time.",
+    icon: <Users />,
   },
 ];
 
 
-import { AlertCircle, FileMinus, Share2, Search } from "lucide-react";
+
+
 
 export const problems = [
   {

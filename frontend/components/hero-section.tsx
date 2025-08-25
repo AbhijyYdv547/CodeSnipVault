@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { BackgroundLines } from "./ui/background-lines";
 import { Button } from "./ui/button";
+import { CircleArrowRight, LogIn } from "lucide-react";
 
 const HeroSection = () => {
     const router = useRouter()
@@ -19,19 +19,13 @@ const HeroSection = () => {
                 developer-friendly vault built for productivity and collaboration.
             </p>
             </div>
-            <div className="flex justify-center my-10 md:gap-8 gap-2">
-                <button className="p-1 relative cursor-pointer" onClick={() => router.push("/signup")}>
-                    <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg" />
-                    <div className="px-8 py-2  bg-zinc-900 rounded-[6px]  relative group transition duration-200 text-white hover:bg-transparent">
+            <div className="flex flex-wrap justify-center mt-8 gap-6 z-0 md:flex-row flex-col">
+                <Button className="md:px-20 md:py-9 px-14 py-6 md:font-semibold relative cursor-pointer" variant={"outline"} size="lg" onClick={() => router.push("/signup")}>
                         Sign up
-                    </div>
-                </button>
-                <button className="p-1 relative cursor-pointer" onClick={() => router.push("/login")}>
-                    <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg" />
-                    <div className="px-8 py-2  bg-zinc-900 rounded-[6px]  relative group transition duration-200 text-white hover:bg-transparent">
-                        Login
-                    </div>
-                </button>
+                </Button>
+                <Button className="md:px-20 md:py-9 px-14 py-6 md:font-semibold relative cursor-pointer" variant={"default"} size="lg" onClick={() => router.push("/login")}>
+                   Login
+                </Button>
             </div>
 
             <div className="md:flex mt-10 justify-center hidden">

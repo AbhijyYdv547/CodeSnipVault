@@ -1,7 +1,6 @@
 "use client";
 
 import { problems, solutions } from "@/constants";
-import { motion } from "motion/react";
 
 const AboutSection = () => {
     return (
@@ -9,12 +8,8 @@ const AboutSection = () => {
             id="about"
                 className="relative py-24 border-b border-border bg-background text-foreground flex flex-col gap-5"
         >
-            <motion.div
+            <div
                 className="text-center space-y-4 px-4"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                viewport={{ once: true }}
             >
                 <span className="uppercase text-xs tracking-widest text-zinc-500 font-semibold">
                     Problems & Solutions
@@ -25,7 +20,7 @@ const AboutSection = () => {
                 <p className="text-muted-foreground max-w-xl mx-auto text-base sm:text-lg">
                     Don&apos;t struggle just do CodeSnip Vault
                 </p>
-            </motion.div>
+            </div>
 
 
             <div className="flex md:flex-row flex-col gap-5">
