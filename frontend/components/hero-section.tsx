@@ -1,7 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
-import { CircleArrowRight, LogIn } from "lucide-react";
 
 const HeroSection = () => {
     const router = useRouter()
@@ -11,7 +10,7 @@ const HeroSection = () => {
                 <h1 className="font-mono">
                     CodeSnipVault
                 </h1>
-                <span className="md:text-3xl text-2xl bg-gradient-to-r from-blue-500 to-purple-600 text-transparent bg-clip-text">
+                <span className="md:text-3xl text-2xl bg-gradient-to-r from-zinc-800 to-gray-100 text-transparent bg-clip-text">
                     your code, organized
                 </span>
             <p className="mt-5 text-lg text-center text-neutral-500 max-w-4xl">
@@ -33,7 +32,7 @@ const HeroSection = () => {
                     autoPlay
                     loop
                     muted
-                    className="rounded-lg w-1/2 border border-blue-500 shadow-sm shadow-blue-400 mx-2 my-4"
+                    className="rounded-lg w-1/2 border border-zinc-500 shadow-sm shadow-zinc-400 mx-2 my-4"
                 >
                     <source src="/videos/video1.mp4" type="video/mp4" />
                     Your browser does not support the video tag.
@@ -42,7 +41,7 @@ const HeroSection = () => {
                     autoPlay
                     loop
                     muted
-                    className="rounded-lg w-1/2 border border-blue-500 shadow-sm shadow-blue-400 mx-2 my-4"
+                    className="rounded-lg w-1/2 border border-zinc-500 shadow-sm shadow-zinc-400 mx-2 my-4"
                 >
                     <source src="/videos/video2.mp4" type="video/mp4" />
                     Your browser does not support the video tag.
