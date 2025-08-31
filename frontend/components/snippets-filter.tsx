@@ -10,7 +10,11 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 
-export default function SnippetsFilter() {
+interface ProductsFilterProps{
+    refetchSnippets: () => Promise<void>
+}
+
+export default function SnippetsFilter({refetchSnippets}:ProductsFilterProps) {
     const [search, setSearch] = useQueryState("search", {
         defaultValue:"",
     })
@@ -19,6 +23,20 @@ export default function SnippetsFilter() {
         parseAsInteger.withDefault(0),
     );
 
+    const handleSearch = (value: string) => {
+        setSearch(value);
+        setTimeout(()=>{
+            refetchSnippets()
+        },300)
+    }
+
+    const handlePerPageChange = (value: number) => {
+        setPerPage(value)
+        setTimeout(()=>{
+            refetchSnippets()
+        },300)
+    }
+
     return (
         <div className="flex justify-between">
             <div>
@@ -26,13 +44,13 @@ export default function SnippetsFilter() {
                 placeholder="Search" 
                 className="w-full" 
                 value={search}
-                onChange={(e)=>setSearch(e.target.value)}
+                onChange={(e)=>handleSearch(e.target.value)}
             />
             </div>
             <div>
             <Select
                 value={perPage.toString()}
-                onValueChange={(value)=> setPerPage(Number(value))}
+                onValueChange={(value)=> handlePerPageChange(Number(value))}
             >
                 <SelectTrigger className="w-[180px]">
                     <SelectValue placeholder="Per Page" />

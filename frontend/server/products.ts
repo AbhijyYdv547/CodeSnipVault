@@ -1,15 +1,17 @@
 "use server";
 
-import { Product } from "@/components/shared/types"
+import { Snippet } from "@/components/shared/types"
+import { unstable_cache } from "next/cache";
 
 interface GetProductParams{
-    search: string,
-    perPage?: number
+    search ?: string,
+    perPage ?: number
 }
 
-export async function getProducts({search,perPage}:GetProductParams): Promise<Product[]>{
-    const res = await fetch(`https://api.escuelajs.co/api/v1/products?title=${search}&offset=0&limit=${perPage}`);
+export const getSnippets = unstable_cache( async (params: GetProductParams) : Promise<Snippet> => {
+    const res = await fetch(`https://api.escuelajs.co/api/v1/products?title=${params.search}&offset=0&limit=${params.perPage}`);
     const data = await res.json();
     return data;
-
-}
+},["snippets"], {
+    tags: ["snippets"],
+});

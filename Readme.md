@@ -96,7 +96,8 @@ docker-compose up --build
 * [ ] User authentication (JWT)
 * [ ] Snippet CRUD APIs
 * [X] Frontend authentication pages
-* [ ] Snippet dashboard and editor
+* [X] Snippet dashboard 
+* [ ] Snippet Editor
 * [ ] Public snippet sharing
 * [ ] Deployment with CI/CD
 
