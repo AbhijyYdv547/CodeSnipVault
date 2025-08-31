@@ -1,17 +1,16 @@
-import Image from "next/image";
 import { Product } from "./shared/types";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "./ui/card";
 import { Button } from "./ui/button";
 import { Share2Icon } from "lucide-react";
 import { BadgeDemo } from "./snippet-badege";
 
-interface ProductCardProps {
+interface SnippetCardProps {
     product: Product
 }
 
-export default function ProductCard({ product }: ProductCardProps) {
+export default function SnippetCard({ product }: SnippetCardProps) {
     return (
-        <Card key={product.id} className="flex flex-col justify-between">
+        <Card key={product.id} className="flex flex-col justify-between cursor-pointer">
             <CardHeader>
                 <div className="p-3">
                     <CardTitle>{product.title}</CardTitle>
