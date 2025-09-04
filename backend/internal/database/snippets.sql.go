@@ -63,14 +63,14 @@ func (q *Queries) CreateSnippet(ctx context.Context, arg CreateSnippetParams) (S
 	return i, err
 }
 
-const getSnippetsForUser = `-- name: GetSnippetsForUser :many
+const getSnippetsOfUser = `-- name: GetSnippetsOfUser :many
 SELECT snippets.id, snippets.title, snippets.code, snippets.language, snippets.tags, snippets.created_at, snippets.updated_at, snippets.user_id from snippets
 WHERE snippets.user_id = $1
 ORDER BY snippets.created_at DESC
 `
 
-func (q *Queries) GetSnippetsForUser(ctx context.Context, userID uuid.UUID) ([]Snippet, error) {
-	rows, err := q.db.QueryContext(ctx, getSnippetsForUser, userID)
+func (q *Queries) GetSnippetsOfUser(ctx context.Context, userID uuid.UUID) ([]Snippet, error) {
+	rows, err := q.db.QueryContext(ctx, getSnippetsOfUser, userID)
 	if err != nil {
 		return nil, err
 	}

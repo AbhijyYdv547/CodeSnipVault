@@ -44,3 +44,15 @@ func (apiCfg *ApiConfig) HandlerCreateSnippet(w http.ResponseWriter, r *http.Req
 	respondWithJSON(w, 201, snippet)
 
 }
+
+
+func (apiCfg *ApiConfig) HandlerGetAllSnippets(w http.ResponseWriter, r *http.Request, user database.User) {
+	snippets, err := apiCfg.DB.GetSnippetsOfUser(r.Context(), user.ID)
+	if err != nil {
+		respondWithError(w, 400, fmt.Sprintf("Couldn't get snippets: %v", err))
+		return
+	}
+
+	respondWithJSON(w, 201, snippets)
+
+}

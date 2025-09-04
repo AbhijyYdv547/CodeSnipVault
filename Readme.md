@@ -26,14 +26,14 @@ Users can log in, create and organize their snippets by language and type, and o
 
 **Backend**
 
-* Go (Gin/Fiber)
+* Go (Chi)
 * PostgreSQL
 * JWT Authentication
 
 **Other**
 
 * Docker & Docker Compose
-* Deployment: Vercel (frontend), Railway/GCP (backend)
+* Deployment: Vercel (frontend), Render/AWS (backend)
 
 ---
 
@@ -52,7 +52,7 @@ codesnipvault/
 
 ### Prerequisites
 
-* Go 1.22+
+* Go 1.24+
 * Node.js 18+
 * PostgreSQL
 * Docker (optional, for containerized setup)
@@ -69,9 +69,15 @@ cd codesnipvault
 ```bash
 cd backend
 go mod tidy
-# Run migrations (to be added later)
+
+cd sql/schema
+goose POSTGRES_CONNECTION_STRING up
+cd ../..
+
+sqlc generate
 # Start the server
-go run cmd/server/main.go
+cd cmd/api
+go build && ./api
 ```
 
 ### Frontend Setup
@@ -93,7 +99,7 @@ docker-compose up --build
 ## Roadmap
 
 * [X] Backend project setup
-* [ ] User authentication (JWT)
+* [X] User authentication (JWT)
 * [ ] Snippet CRUD APIs
 * [X] Frontend authentication pages
 * [X] Snippet dashboard 

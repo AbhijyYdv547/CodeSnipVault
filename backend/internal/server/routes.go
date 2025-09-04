@@ -15,6 +15,7 @@ func routerHandler(r *chi.Mux, apiCfg *handler.ApiConfig) {
 
 		r.Route("/snippet", func(r chi.Router) {
 			r.Post("/create", apiCfg.MiddlewareAuth(apiCfg.HandlerCreateSnippet))
+			r.Get("/",apiCfg.MiddlewareAuth(apiCfg.HandlerGetAllSnippets))
 		})
 	})
 }
