@@ -112,3 +112,33 @@ func (apiCfg *ApiConfig) UpdateSnippetHandler(w http.ResponseWriter, r *http.Req
 
 	respondWithJSON(w,200,updatedSnippet)
 }
+
+func (apiCfg *ApiConfig) DeleteSnippetHandler(w http.ResponseWriter, r *http.Request, user database.User) {
+	idStr := chi.URLParam(r, "id")
+
+	id, err := uuid.Parse(idStr)
+	if err != nil {
+		respondWithError(w, 400, fmt.Sprintf("No id for snippet present: %v", err))
+		return
+	}
+
+	decoder := json.NewDecoder(r.Body)
+
+	params := parameters{}
+	err = decoder.Decode(&params)
+	if err != nil {
+		respondWithError(w, 400, fmt.Sprintf("Error parsing JSON: %v", err))
+		return
+	}
+
+	err = apiCfg.DB.DeleteSnippet(r.Context(), database.DeleteSnippetParams{
+		UserID: user.ID,
+		ID: id,
+	})
+	if err != nil {
+		respondWithError(w, 400, fmt.Sprintf("Error deleting snippet: %v", err))
+		return
+	}
+
+	respondWithJSON(w,200,"Snippet Deleted")
+}

@@ -63,6 +63,22 @@ func (q *Queries) CreateSnippet(ctx context.Context, arg CreateSnippetParams) (S
 	return i, err
 }
 
+const deleteSnippet = `-- name: DeleteSnippet :exec
+DELETE from snippets
+WHERE user_id = $1
+AND id = $2
+`
+
+type DeleteSnippetParams struct {
+	UserID uuid.UUID
+	ID     uuid.UUID
+}
+
+func (q *Queries) DeleteSnippet(ctx context.Context, arg DeleteSnippetParams) error {
+	_, err := q.db.ExecContext(ctx, deleteSnippet, arg.UserID, arg.ID)
+	return err
+}
+
 const getSnippetsOfUser = `-- name: GetSnippetsOfUser :many
 SELECT id, title, code, language, tags, created_at, updated_at, user_id from snippets
 WHERE user_id = $1

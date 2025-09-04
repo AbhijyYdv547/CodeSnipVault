@@ -35,3 +35,8 @@ AND id = $6
 RETURNING *;
 
 
+-- name: DeleteSnippet :exec
+DELETE from snippets
+WHERE user_id = $1
+AND id = $2;
+
