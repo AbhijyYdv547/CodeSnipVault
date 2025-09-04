@@ -4,7 +4,6 @@ import (
 	"backend/internal/database"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"time"
 
@@ -12,7 +11,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func (apiCfg *ApiConfig) HandlerCreateUser(w http.ResponseWriter, r *http.Request) {
+func (apiCfg *ApiConfig) SignupHandler(w http.ResponseWriter, r *http.Request) {
 	type parameters struct {
 		Username string `json:"username"`
 		Email string `json:"email"`
@@ -28,9 +27,17 @@ func (apiCfg *ApiConfig) HandlerCreateUser(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
+	_, err = apiCfg.DB.GetUserByEmail(r.Context(), params.Email)
+	if err == nil {
+		respondWithError(w, 409, "Email already in use")
+		return
+	}
+
+
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(params.Password), 10)
 	if err != nil {
-		log.Fatal(err)
+		respondWithError(w, 500, "Internal server error")
+		return
 	}
 
 	user,err := apiCfg.DB.CreatUser(r.Context(), database.CreatUserParams{
@@ -53,7 +60,8 @@ func (apiCfg *ApiConfig) HandlerCreateUser(w http.ResponseWriter, r *http.Reques
 
 
 
-func (apiCfg *ApiConfig) HandlerLoginUser(w http.ResponseWriter, r *http.Request) {
+func (apiCfg *ApiConfig) LoginHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
 	type parameters struct {
 		Email string `json:"email"`
 		Password string `json:"password"`
@@ -82,6 +90,13 @@ func (apiCfg *ApiConfig) HandlerLoginUser(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	respondWithJSON(w, 201, user)
+
+	tokenString, err := createToken(user.Username)
+	if err != nil {
+		respondWithError(w, 400, fmt.Sprintf("Some error occured: %v", err))
+		return
+	}
+
+	respondWithJSON(w, 201,tokenString)
 	
 }
