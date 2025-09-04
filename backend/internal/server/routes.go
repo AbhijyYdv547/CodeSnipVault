@@ -13,8 +13,8 @@ func routerHandler(r *chi.Mux, apiCfg *handler.ApiConfig) {
 			r.Post("/login", apiCfg.HandlerLoginUser)
 		})
 
-		r.Route("/snippet", func(r chi.Router) {
-			r.Post("/create", apiCfg.HandlerCreateSnippet)
-		})
+		// r.Route("/snippet", func(r chi.Router) {
+		// 	r.Post("/create", apiCfg.HandlerCreateSnippet)
+		// })
 	})
 }

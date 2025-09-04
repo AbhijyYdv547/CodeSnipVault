@@ -4,10 +4,12 @@ import (
 	"backend/internal/database"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"time"
 
 	"github.com/google/uuid"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func (apiCfg *ApiConfig) HandlerCreateUser(w http.ResponseWriter, r *http.Request) {
@@ -26,11 +28,16 @@ func (apiCfg *ApiConfig) HandlerCreateUser(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(params.Password), 10)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	user,err := apiCfg.DB.CreatUser(r.Context(), database.CreatUserParams{
 		ID: uuid.New(),
 		Username: params.Username,
 		Email: params.Email,
-		Password: params.Password,
+		Password: string(hashedPassword),
 		CreatedAt: time.Now().UTC(),
 		UpdatedAt: time.Now().UTC(),
 	})
@@ -61,13 +68,17 @@ func (apiCfg *ApiConfig) HandlerLoginUser(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	user,err := apiCfg.DB.GetUserByEmail(r.Context(), database.GetUserByEmailParams{
-		Email: params.Email,
-		Password: params.Password,
-	})
-
-		if err != nil {
+	
+	user,err := apiCfg.DB.GetUserByEmail(r.Context(), params.Email)
+	
+	if err != nil {
 		respondWithError(w, 400, fmt.Sprintf("Couldn't find user: %v", err))
+		return
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(params.Password))
+	if err != nil {
+		respondWithError(w, 400, fmt.Sprintf("Wrong password: %v", err))
 		return
 	}
 
