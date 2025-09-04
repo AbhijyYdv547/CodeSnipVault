@@ -32,6 +32,7 @@ func gracefulShutdown(apiServer *http.Server, done chan bool) {
 	done <- true
 }
 
+
 func main() {
 	godotenv.Load(".env")
 
@@ -39,7 +40,6 @@ func main() {
 	if portString == "" {
 		log.Fatal("PORT is not found in the .env")
 	}
-
 
 	r := getApi()
 
