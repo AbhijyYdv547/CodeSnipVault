@@ -10,6 +10,17 @@ import (
 	"github.com/google/uuid"
 )
 
+type Snippet struct {
+	ID        uuid.UUID
+	Title     string
+	Code      string
+	Language  string
+	Tags      []string
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	UserID    uuid.UUID
+}
+
 type User struct {
 	ID        uuid.UUID
 	CreatedAt time.Time
