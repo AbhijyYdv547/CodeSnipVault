@@ -13,7 +13,25 @@ RETURNING *;
 
 
 -- name: GetSnippetsOfUser :many
-SELECT snippets.* from snippets
-WHERE snippets.user_id = $1
-ORDER BY snippets.created_at DESC;
+SELECT * from snippets
+WHERE user_id = $1
+ORDER BY created_at DESC;
+
+
+-- name: GetSpecificSnippet :one
+SELECT * from snippets
+WHERE user_id = $1
+AND id = $2;
+
+-- name: UpdateSnippet :one
+UPDATE snippets
+SET title = $1,
+code = $2,
+language = $3,
+tags = $4,
+updated_at = NOW()
+WHERE user_id = $5
+AND id = $6 
+RETURNING *;
+
 

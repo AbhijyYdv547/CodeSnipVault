@@ -64,9 +64,9 @@ func (q *Queries) CreateSnippet(ctx context.Context, arg CreateSnippetParams) (S
 }
 
 const getSnippetsOfUser = `-- name: GetSnippetsOfUser :many
-SELECT snippets.id, snippets.title, snippets.code, snippets.language, snippets.tags, snippets.created_at, snippets.updated_at, snippets.user_id from snippets
-WHERE snippets.user_id = $1
-ORDER BY snippets.created_at DESC
+SELECT id, title, code, language, tags, created_at, updated_at, user_id from snippets
+WHERE user_id = $1
+ORDER BY created_at DESC
 `
 
 func (q *Queries) GetSnippetsOfUser(ctx context.Context, userID uuid.UUID) ([]Snippet, error) {
@@ -99,4 +99,75 @@ func (q *Queries) GetSnippetsOfUser(ctx context.Context, userID uuid.UUID) ([]Sn
 		return nil, err
 	}
 	return items, nil
+}
+
+const getSpecificSnippet = `-- name: GetSpecificSnippet :one
+SELECT id, title, code, language, tags, created_at, updated_at, user_id from snippets
+WHERE user_id = $1
+AND id = $2
+`
+
+type GetSpecificSnippetParams struct {
+	UserID uuid.UUID
+	ID     uuid.UUID
+}
+
+func (q *Queries) GetSpecificSnippet(ctx context.Context, arg GetSpecificSnippetParams) (Snippet, error) {
+	row := q.db.QueryRowContext(ctx, getSpecificSnippet, arg.UserID, arg.ID)
+	var i Snippet
+	err := row.Scan(
+		&i.ID,
+		&i.Title,
+		&i.Code,
+		&i.Language,
+		pq.Array(&i.Tags),
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.UserID,
+	)
+	return i, err
+}
+
+const updateSnippet = `-- name: UpdateSnippet :one
+UPDATE snippets
+SET title = $1,
+code = $2,
+language = $3,
+tags = $4,
+updated_at = NOW()
+WHERE user_id = $5
+AND id = $6 
+RETURNING id, title, code, language, tags, created_at, updated_at, user_id
+`
+
+type UpdateSnippetParams struct {
+	Title    string
+	Code     string
+	Language string
+	Tags     []string
+	UserID   uuid.UUID
+	ID       uuid.UUID
+}
+
+func (q *Queries) UpdateSnippet(ctx context.Context, arg UpdateSnippetParams) (Snippet, error) {
+	row := q.db.QueryRowContext(ctx, updateSnippet,
+		arg.Title,
+		arg.Code,
+		arg.Language,
+		pq.Array(arg.Tags),
+		arg.UserID,
+		arg.ID,
+	)
+	var i Snippet
+	err := row.Scan(
+		&i.ID,
+		&i.Title,
+		&i.Code,
+		&i.Language,
+		pq.Array(&i.Tags),
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.UserID,
+	)
+	return i, err
 }
