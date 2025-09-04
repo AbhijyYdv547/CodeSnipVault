@@ -1,6 +1,7 @@
 package server
 
 import (
+	"backend/internal/handler"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -8,7 +9,7 @@ import (
 	"github.com/go-chi/cors"
 )
 
-func GetApi() http.Handler {
+func GetApi(apiCfg *handler.ApiConfig) http.Handler {
 	r := chi.NewRouter()
 	r.Use(cors.Handler(cors.Options{
 		AllowedOrigins:   []string{"https://*", "http://*"},
@@ -20,7 +21,7 @@ func GetApi() http.Handler {
 	}))
 	r.Use(middleware.Logger)
 
-	routerHandler(r)
+	routerHandler(r,apiCfg)
 
 	return r
 }

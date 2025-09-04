@@ -1,15 +1,13 @@
 package server
 
 import (
-	"net/http"
+	"backend/internal/handler"
 
 	"github.com/go-chi/chi/v5"
 )
 
-func routerHandler(r *chi.Mux) {
+func routerHandler(r *chi.Mux, apiCfg *handler.ApiConfig) {
 	r.Route("/v1", func(r chi.Router) {
-		r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-			w.Write([]byte("Hello world"))
-		})
+		r.Post("/signup", apiCfg.HandlerCreateUser)
 	})
 }
