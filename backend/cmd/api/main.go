@@ -1,8 +1,11 @@
 package main
 
 import (
+	"backend/internal/database"
+	"backend/internal/handler"
 	"backend/internal/server"
 	"context"
+	"database/sql"
 	"log"
 	"net/http"
 	"os"
@@ -35,14 +38,29 @@ func gracefulShutdown(apiServer *http.Server, done chan bool) {
 
 
 func main() {
-	godotenv.Load(".env")
+	godotenv.Load("../../.env")
 
 	portString := os.Getenv("PORT")
 	if portString == "" {
 		log.Fatal("PORT is not found in the .env")
 	}
 
-	r := server.GetApi()
+	dbURL := os.Getenv("DB_URL")
+	if dbURL == "" {
+		log.Fatal("DB_URL is not found in the .env")
+	}
+
+	conn,err := sql.Open("postgres",dbURL)
+	if err!=nil {
+		log.Fatal("Can't connect to database")
+	}
+	
+	db := database.New(conn)
+	apiCfg := &handler.ApiConfig{
+		DB: db,
+	}
+
+	r := server.GetApi(apiCfg)
 
 	done := make(chan bool, 1)
 	srv := &http.Server{
@@ -52,7 +70,8 @@ func main() {
 
 	go gracefulShutdown(srv, done)
 
-	err := srv.ListenAndServe()
+		log.Printf("Server starting on port %v", portString)
+	err = srv.ListenAndServe()
 	if err != nil && err != http.ErrServerClosed {
 		log.Fatal("http server error: ", err)
 	}
