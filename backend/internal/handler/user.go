@@ -19,7 +19,7 @@ func (apiCfg *ApiConfig) HandlerCreateUser(w http.ResponseWriter, r *http.Reques
 
 	decoder := json.NewDecoder(r.Body)
 
-		params := parameters{}
+	params := parameters{}
 	err := decoder.Decode(&params)
 	if err != nil {
 		respondWithError(w, 400, fmt.Sprintf("Error parsing JSON: %v", err))
@@ -37,6 +37,37 @@ func (apiCfg *ApiConfig) HandlerCreateUser(w http.ResponseWriter, r *http.Reques
 
 		if err != nil {
 		respondWithError(w, 400, fmt.Sprintf("Couldn't create user: %v", err))
+		return
+	}
+
+	respondWithJSON(w, 201, user)
+	
+}
+
+
+
+func (apiCfg *ApiConfig) HandlerLoginUser(w http.ResponseWriter, r *http.Request) {
+	type parameters struct {
+		Email string `json:"email"`
+		Password string `json:"password"`
+	}
+
+	decoder := json.NewDecoder(r.Body)
+
+	params := parameters{}
+	err := decoder.Decode(&params)
+	if err != nil {
+		respondWithError(w, 400, fmt.Sprintf("Error parsing JSON: %v", err))
+		return
+	}
+
+	user,err := apiCfg.DB.GetUserByEmail(r.Context(), database.GetUserByEmailParams{
+		Email: params.Email,
+		Password: params.Password,
+	})
+
+		if err != nil {
+		respondWithError(w, 400, fmt.Sprintf("Couldn't find user: %v", err))
 		return
 	}
 
