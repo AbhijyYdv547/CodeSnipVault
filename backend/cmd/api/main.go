@@ -4,12 +4,12 @@ import (
 	"context"
 	"log"
 	"net/http"
+	"os"
 	"os/signal"
 	"syscall"
 	"time"
 
-	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
+	"github.com/joho/godotenv"
 )
 
 func gracefulShutdown(apiServer *http.Server, done chan bool) {
@@ -33,15 +33,21 @@ func gracefulShutdown(apiServer *http.Server, done chan bool) {
 }
 
 func main() {
-	r := chi.NewRouter()
-	r.Use(middleware.Logger)
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Hello world"))
-	})
+	godotenv.Load(".env")
 
+	portString := os.Getenv("PORT")
+	if portString == "" {
+		log.Fatal("PORT is not found in the .env")
+	}
+
+
+	r := getApi()
 
 	done := make(chan bool, 1)
-	server := &http.Server{Addr: ":8000", Handler: r}
+	server := &http.Server{
+		Handler: r,
+		Addr: ":" + portString,
+	}
 
 	go gracefulShutdown(server, done)
 
