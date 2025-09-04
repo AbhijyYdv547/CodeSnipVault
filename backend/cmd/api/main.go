@@ -1,6 +1,7 @@
 package main
 
 import (
+	"backend/internal/server"
 	"context"
 	"log"
 	"net/http"
@@ -41,17 +42,17 @@ func main() {
 		log.Fatal("PORT is not found in the .env")
 	}
 
-	r := getApi()
+	r := server.GetApi()
 
 	done := make(chan bool, 1)
-	server := &http.Server{
+	srv := &http.Server{
 		Handler: r,
 		Addr: ":" + portString,
 	}
 
-	go gracefulShutdown(server, done)
+	go gracefulShutdown(srv, done)
 
-	err := server.ListenAndServe()
+	err := srv.ListenAndServe()
 	if err != nil && err != http.ErrServerClosed {
 		log.Fatal("http server error: ", err)
 	}

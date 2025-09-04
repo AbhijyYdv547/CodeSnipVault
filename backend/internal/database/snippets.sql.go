@@ -14,7 +14,15 @@ import (
 )
 
 const createSnippet = `-- name: CreateSnippet :one
-INSERT INTO snippets (id, title, code, language, tags, created_at, updated_at, user_id)
+INSERT INTO snippets (
+    id, 
+    title, 
+    code, 
+    language, 
+    tags, 
+    created_at, 
+    updated_at, 
+    user_id)
 VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
 RETURNING id, title, code, language, tags, created_at, updated_at, user_id
 `
@@ -55,12 +63,14 @@ func (q *Queries) CreateSnippet(ctx context.Context, arg CreateSnippetParams) (S
 	return i, err
 }
 
-const getSnippets = `-- name: GetSnippets :many
-SELECT id, title, code, language, tags, created_at, updated_at, user_id from snippets
+const getSnippetsForUser = `-- name: GetSnippetsForUser :many
+SELECT snippets.id, snippets.title, snippets.code, snippets.language, snippets.tags, snippets.created_at, snippets.updated_at, snippets.user_id from snippets
+WHERE snippets.user_id = $1
+ORDER BY snippets.created_at DESC
 `
 
-func (q *Queries) GetSnippets(ctx context.Context) ([]Snippet, error) {
-	rows, err := q.db.QueryContext(ctx, getSnippets)
+func (q *Queries) GetSnippetsForUser(ctx context.Context, userID uuid.UUID) ([]Snippet, error) {
+	rows, err := q.db.QueryContext(ctx, getSnippetsForUser, userID)
 	if err != nil {
 		return nil, err
 	}
