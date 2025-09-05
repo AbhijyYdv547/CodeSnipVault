@@ -12,15 +12,15 @@ import (
 	"github.com/joho/godotenv"
 )
 
-
 func getSecret() []byte {
-	godotenv.Load("../../.env")
+	_ = godotenv.Load("../../.env")
 	secret := os.Getenv("JWT_SECRET")
 	if secret == "" {
 		log.Fatal("JWT_SECRET is not found in the .env")
 	}
 	return []byte(secret)
 }
+
 var secretKey = getSecret()
 
 type authedHandler func(http.ResponseWriter, *http.Request, database.User)
@@ -29,11 +29,7 @@ func (apiCfg *ApiConfig) MiddlewareAuth(handler authedHandler) http.HandlerFunc 
 	return func(w http.ResponseWriter, r *http.Request) {
 		tokenString, err := r.Cookie("token")
 		if err != nil {
-			if err == http.ErrNoCookie {
-				w.WriteHeader(http.StatusUnauthorized)
-				return
-			}
-			w.WriteHeader(http.StatusBadRequest)
+			respondWithError(w, http.StatusUnauthorized, "Missing Auth Token")
 			return
 		}
 		token := tokenString.Value
@@ -54,12 +50,11 @@ func (apiCfg *ApiConfig) MiddlewareAuth(handler authedHandler) http.HandlerFunc 
 	}
 }
 
-
 func createToken(username string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256,
 		jwt.MapClaims{
 			"username": username,
-			"exp":      time.Now().Add(2 * time.Minute).Unix(),
+			"exp":      time.Now().Add(30 * time.Minute).Unix(),
 		})
 
 	tokenString, err := token.SignedString(secretKey)

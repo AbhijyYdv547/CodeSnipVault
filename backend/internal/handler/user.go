@@ -98,7 +98,7 @@ func (apiCfg *ApiConfig) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, &http.Cookie{
 		Name:     "token",
 		Value:    tokenString,
-		Expires:  time.Now().Add(2 * time.Minute),
+		Expires:  time.Now().Add(30 * time.Minute),
 		HttpOnly: true,
 		Secure:   os.Getenv("ENV") == "production",
 		SameSite: http.SameSiteStrictMode,
