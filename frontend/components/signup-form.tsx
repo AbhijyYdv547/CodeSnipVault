@@ -4,17 +4,60 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import axios from "@/lib/axios"
+import Link from "next/link";
 
 export function SignupForm({
     className,
     ...props
 }: React.ComponentProps<"div">) {
+
+    const router = useRouter()
+
+    async function handleSignup(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+        const form = e.currentTarget;
+        const formData = new FormData(form); 
+
+        const username = formData.get("username")?.toString().trim();
+        const email = formData.get("email")?.toString().trim();
+        const password = formData.get("password")?.toString();
+
+        const isPasswordValid = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/.test(password!);
+        if (!isPasswordValid) {
+            toast("Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.");
+            return;
+        }
+
+
+        if (!username || !email || !password) {
+            toast("Please fill in all fields");
+            return;
+        }
+
+        try {
+            await axios.post("/v1/auth/signup", {
+                username,
+                email,
+                password,
+            }
+            );
+            toast("User has been registered successfully")
+            router.push("/login")
+        } catch (err:any) {
+            toast("Registration failed. Please try again. Make sure the password must be at least 8 characters long and include uppercase, lowercase, number, and special character.")
+            console.error("Registration error", err.response?.data || err);
+        }
+    }
+
     return (
         <div className={cn("flex flex-col gap-6", className)} {...props}>
             <Card className="overflow-hidden p-0">
                 <CardContent className="grid p-0 md:grid-cols-2">
-                    <form className="p-6 md:p-8">
-                        <div className="flex flex-col gap-6">
+                    <form className="p-6 md:p-8" onSubmit={handleSignup}>
+                        <div className="flex flex-col gap-3">
                             <div className="flex flex-col items-center text-center">
                                 <h1 className="text-2xl font-bold">Welcome!</h1>
                                 <p className="text-muted-foreground text-balance">
@@ -22,9 +65,20 @@ export function SignupForm({
                                 </p>
                             </div>
                             <div className="grid gap-3">
+                                <Label htmlFor="username">Username</Label>
+                                <Input
+                                    id="username"
+                                    name="username"
+                                    type="text"
+                                    placeholder="m@examplename"
+                                    required
+                                />
+                            </div>
+                            <div className="grid gap-3">
                                 <Label htmlFor="email">Email</Label>
                                 <Input
                                     id="email"
+                                    name="email"
                                     type="email"
                                     placeholder="m@example.com"
                                     required
@@ -34,7 +88,7 @@ export function SignupForm({
                                 <div className="flex items-center">
                                     <Label htmlFor="password">Password</Label>
                                 </div>
-                                <Input id="password" type="password" required />
+                                <Input id="password" name="password" type="password" required />
                             </div>
                             <Button type="submit" className="w-full">
                                 Signup
@@ -57,9 +111,9 @@ export function SignupForm({
                             </div>
                             <div className="text-center text-sm">
                                 Already have an account?{" "}
-                                <a href="/login" className="underline underline-offset-4">
+                                <Link href="/login" className="underline underline-offset-4">
                                     Login
-                                </a>
+                                </Link>
                             </div>
                         </div>
                     </form>

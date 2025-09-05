@@ -98,12 +98,11 @@ docker-compose up --build
 
 ## Roadmap
 
-* [X] Backend project setup
-* [X] User authentication (JWT)
-* [ ] Snippet CRUD APIs
 * [X] Frontend authentication pages
+* [ ] Hook auth pages to endpoints
 * [X] Snippet dashboard 
 * [ ] Snippet Editor
+* [ ] Hook Dashboard and editor to endpoints
 * [ ] Public snippet sharing
 * [ ] Deployment with CI/CD
 
