@@ -23,7 +23,6 @@ export default async function DashoboardPage({ searchParams }: PageProps) {
 
     async function refetchSnippets() {
         "use server"
-
         revalidateTag("snippets")
     }
 
