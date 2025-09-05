@@ -3,18 +3,19 @@ package handler
 import (
 	"backend/internal/database"
 	"encoding/json"
-	"fmt"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/joho/godotenv"
 	"golang.org/x/crypto/bcrypt"
 )
 
 func (apiCfg *ApiConfig) SignupHandler(w http.ResponseWriter, r *http.Request) {
 	type parameters struct {
 		Username string `json:"username"`
-		Email string `json:"email"`
+		Email    string `json:"email"`
 		Password string `json:"password"`
 	}
 
@@ -23,7 +24,7 @@ func (apiCfg *ApiConfig) SignupHandler(w http.ResponseWriter, r *http.Request) {
 	params := parameters{}
 	err := decoder.Decode(&params)
 	if err != nil {
-		respondWithError(w, 400, fmt.Sprintf("Error parsing JSON: %v", err))
+		respondWithError(w, 400, "Error parsing JSON")
 		return
 	}
 
@@ -33,37 +34,35 @@ func (apiCfg *ApiConfig) SignupHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(params.Password), 10)
 	if err != nil {
 		respondWithError(w, 500, "Internal server error")
 		return
 	}
 
-	user,err := apiCfg.DB.CreatUser(r.Context(), database.CreatUserParams{
-		ID: uuid.New(),
-		Username: params.Username,
-		Email: params.Email,
-		Password: string(hashedPassword),
+	user, err := apiCfg.DB.CreateUser(r.Context(), database.CreateUserParams{
+		ID:        uuid.New(),
+		Username:  params.Username,
+		Email:     params.Email,
+		Password:  string(hashedPassword),
 		CreatedAt: time.Now().UTC(),
 		UpdatedAt: time.Now().UTC(),
 	})
 
-		if err != nil {
-		respondWithError(w, 400, fmt.Sprintf("Couldn't create user: %v", err))
+	if err != nil {
+		respondWithError(w, 400, "Couldn't create user")
 		return
 	}
 
 	respondWithJSON(w, 201, user)
-	
+
 }
-
-
 
 func (apiCfg *ApiConfig) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
+	godotenv.Load("../../.env")
 	type parameters struct {
-		Email string `json:"email"`
+		Email    string `json:"email"`
 		Password string `json:"password"`
 	}
 
@@ -72,31 +71,38 @@ func (apiCfg *ApiConfig) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	params := parameters{}
 	err := decoder.Decode(&params)
 	if err != nil {
-		respondWithError(w, 400, fmt.Sprintf("Error parsing JSON: %v", err))
+		respondWithError(w, 400, "Error parsing JSON")
 		return
 	}
 
-	
-	user,err := apiCfg.DB.GetUserByEmail(r.Context(), params.Email)
-	
+	user, err := apiCfg.DB.GetUserByEmail(r.Context(), params.Email)
+
 	if err != nil {
-		respondWithError(w, 400, fmt.Sprintf("Couldn't find user: %v", err))
+		respondWithError(w, 400, "Couldn't find user")
 		return
 	}
 
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(params.Password))
 	if err != nil {
-		respondWithError(w, 400, fmt.Sprintf("Wrong password: %v", err))
+		respondWithError(w, 400, "Wrong password")
 		return
 	}
-
 
 	tokenString, err := createToken(user.Username)
 	if err != nil {
-		respondWithError(w, 400, fmt.Sprintf("Some error occured: %v", err))
+		respondWithError(w, 400, "Some error occured")
 		return
 	}
 
-	respondWithJSON(w, 201,tokenString)
-	
+
+	http.SetCookie(w, &http.Cookie{
+		Name:     "token",
+		Value:    tokenString,
+		Expires:  time.Now().Add(2 * time.Minute),
+		HttpOnly: true,
+		Secure:   os.Getenv("ENV") == "production",
+		SameSite: http.SameSiteStrictMode,
+		Path:     "/",
+	})
+	respondWithJSON(w, 200, "Login Successful")
 }

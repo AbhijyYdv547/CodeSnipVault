@@ -3,29 +3,46 @@ package handler
 import (
 	"backend/internal/database"
 	"fmt"
+	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/joho/godotenv"
 )
+
+
+func getSecret() []byte {
+	godotenv.Load("../../.env")
+	secret := os.Getenv("JWT_SECRET")
+	if secret == "" {
+		log.Fatal("JWT_SECRET is not found in the .env")
+	}
+	return []byte(secret)
+}
+var secretKey = getSecret()
 
 type authedHandler func(http.ResponseWriter, *http.Request, database.User)
 
 func (apiCfg *ApiConfig) MiddlewareAuth(handler authedHandler) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		tokenString := r.Header.Get("Authorization")
-		if tokenString == "" {
-			respondWithError(w,http.StatusUnauthorized,"Missing authorization header")
+		tokenString, err := r.Cookie("token")
+		if err != nil {
+			if err == http.ErrNoCookie {
+				w.WriteHeader(http.StatusUnauthorized)
+				return
+			}
+			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
+		token := tokenString.Value
 
-		tokenString = tokenString[len("Bearer "):]
-
-		username, err := verifyToken(tokenString)
-  		if err != nil {
-    		respondWithError(w,http.StatusUnauthorized,"Invalid token")
-    		return
-  		}
+		username, err := verifyToken(token)
+		if err != nil {
+			respondWithError(w, http.StatusUnauthorized, "Invalid token")
+			return
+		}
 
 		user, err := apiCfg.DB.GetUserByUsername(r.Context(), username)
 		if err != nil {
@@ -37,16 +54,12 @@ func (apiCfg *ApiConfig) MiddlewareAuth(handler authedHandler) http.HandlerFunc 
 	}
 }
 
-var secretKey = []byte("secret-key")
-
-
-
 
 func createToken(username string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256,
 		jwt.MapClaims{
 			"username": username,
-			"exp":      time.Now().Add(time.Hour * 24).Unix(),
+			"exp":      time.Now().Add(2 * time.Minute).Unix(),
 		})
 
 	tokenString, err := token.SignedString(secretKey)
@@ -57,10 +70,7 @@ func createToken(username string) (string, error) {
 	return tokenString, nil
 }
 
-
-
-
-func verifyToken(tokenString string) (string,error) {
+func verifyToken(tokenString string) (string, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		return secretKey, nil
 	})
