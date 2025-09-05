@@ -1,6 +1,6 @@
 "use client";
 
-import { parseAsInteger, useQueryState } from "nuqs";
+import { useQueryState } from "nuqs";
 import { Input } from "./ui/input";
 import {
     Select,
@@ -18,27 +18,26 @@ export default function SnippetsFilter({refetchSnippets}:ProductsFilterProps) {
     const [search, setSearch] = useQueryState("search", {
         defaultValue:"",
     })
-    const [perPage, setPerPage] = useQueryState(
-        "perPage",
-        parseAsInteger.withDefault(0),
+    const [language, setLanguage] = useQueryState(
+        "language",
     );
 
     const handleSearch = (value: string) => {
         setSearch(value);
         setTimeout(()=>{
             refetchSnippets()
-        },300)
+        },200)
     }
 
-    const handlePerPageChange = (value: number) => {
-        setPerPage(value)
+    const handleLanguageChange = (value: string) => {
+        setLanguage(value)
         setTimeout(()=>{
             refetchSnippets()
-        },300)
+        },200)
     }
 
     return (
-        <div className="flex justify-between">
+        <div>
             <div>
             <Input 
                 placeholder="Search" 
@@ -49,18 +48,19 @@ export default function SnippetsFilter({refetchSnippets}:ProductsFilterProps) {
             </div>
             <div>
             <Select
-                value={perPage.toString()}
-                onValueChange={(value)=> handlePerPageChange(Number(value))}
+                value={language!.toString()}
+                onValueChange={(value)=> handleLanguageChange(value)}
             >
                 <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Per Page" />
+                    <SelectValue placeholder="Language" />
                 </SelectTrigger>
                 <SelectContent>
-                    <SelectItem value="10">10</SelectItem>
-                    <SelectItem value="20">20</SelectItem>
-                    <SelectItem value="30">30</SelectItem>
-                    <SelectItem value="40">40</SelectItem>
-                    <SelectItem value="50">50</SelectItem>
+                    <SelectItem value="JS/TS">Javascript/Typescript</SelectItem>
+                    <SelectItem value="Java">Java</SelectItem>
+                    <SelectItem value="CPP">C++</SelectItem>
+                    <SelectItem value="GO">Golang</SelectItem>
+                    <SelectItem value="PY">Python</SelectItem>
+                    <SelectItem value="PHP">PHP</SelectItem>
                 </SelectContent>
             </Select>
             </div>

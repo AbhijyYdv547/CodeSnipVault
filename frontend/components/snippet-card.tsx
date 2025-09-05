@@ -2,7 +2,7 @@ import { Snippet } from "./shared/types";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "./ui/card";
 import { Button } from "./ui/button";
 import { BookOpen, Share2Icon } from "lucide-react";
-import { BadgeDemo } from "./snippet-badege";
+import { BadgeDemo } from "./snippet-badge";
 import {
     Dialog,
     DialogClose,

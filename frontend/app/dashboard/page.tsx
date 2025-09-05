@@ -11,10 +11,7 @@ type PageProps = {
     searchParams: Promise<SearchParams>
 }
 
-
-
-
-export default async function DashoboardPage({ searchParams }: PageProps) {
+export default async function DashboardPage({ searchParams }: PageProps) {
     const { search, perPage, offset } = await loadSearchParams(searchParams)
 
     const transformedOffset = (offset - 1) * perPage;
@@ -29,7 +26,7 @@ export default async function DashoboardPage({ searchParams }: PageProps) {
     return (
         <DashboardLayout>
         <div className="flex flex-col gap-10 justify-center max-w-6xl mx-auto">
-            <h1>Awesome Products</h1>
+            <h1>Your Code Snippets</h1>
 
             <SnippetsFilter refetchSnippets={refetchSnippets} />
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
