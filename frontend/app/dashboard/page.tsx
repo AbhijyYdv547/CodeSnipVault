@@ -5,7 +5,7 @@ import { loadSearchParams } from '@/components/search-params'
 import type { SearchParams } from 'nuqs/server'
 import { revalidateTag } from "next/cache";
 import SnippetsPagination from "@/components/snippets-pagination";
-// import DashboardLayout from "@/components/DashboardLayout";
+import DashboardLayout from "@/components/DashboardLayout";
 
 type PageProps = {
     searchParams: Promise<SearchParams>
@@ -28,7 +28,8 @@ export default async function DashoboardPage({ searchParams }: PageProps) {
     }
 
     return (
-        <div className="flex flex-col gap-10 justify-center max-w-6xl mx-auto py-10">
+        <DashboardLayout>
+        <div className="flex flex-col gap-10 justify-center max-w-6xl mx-auto">
             <h1>Awesome Products</h1>
 
             <SnippetsFilter refetchSnippets={refetchSnippets} />
@@ -40,6 +41,6 @@ export default async function DashoboardPage({ searchParams }: PageProps) {
             </div>
             <SnippetsPagination refetchSnippets={refetchSnippets} />
         </div>
-
+        </DashboardLayout>
     )
 }
