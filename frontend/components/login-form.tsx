@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label"
 import { toast } from "sonner";
 import axios from "@/lib/axios";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export function LoginForm({
     className,
@@ -42,6 +43,7 @@ export function LoginForm({
                 );
                 toast("User has successfully logged in")
                 router.push("/dashboard")
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             } catch (err:any) {
                 toast("Login failed. Please try again. Make sure the password must be at least 8 characters long and include uppercase, lowercase, number, and special character.")
                 console.error("Login error", err.response?.data || err);
@@ -105,9 +107,10 @@ export function LoginForm({
                         </div>
                     </form>
                     <div className="bg-muted relative hidden md:block">
-                        <img
+                        <Image
                             src="/placeholder.svg"
                             alt="Image"
+                            fill
                             className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
                         />
                     </div>

@@ -8,6 +8,8 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import axios from "@/lib/axios"
 import Link from "next/link";
+import Image from "next/image";
+
 
 export function SignupForm({
     className,
@@ -46,7 +48,9 @@ export function SignupForm({
             );
             toast("User has been registered successfully")
             router.push("/login")
-        } catch (err:any) {
+        }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        catch (err:any) {
             toast("Registration failed. Please try again. Make sure the password must be at least 8 characters long and include uppercase, lowercase, number, and special character.")
             console.error("Registration error", err.response?.data || err);
         }
@@ -118,9 +122,10 @@ export function SignupForm({
                         </div>
                     </form>
                     <div className="bg-muted relative hidden md:block">
-                        <img
+                        <Image
                             src="/placeholder.svg"
                             alt="Image"
+                            fill
                             className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
                         />
                     </div>
