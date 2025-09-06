@@ -40,3 +40,10 @@ DELETE from snippets
 WHERE user_id = $1
 AND id = $2;
 
+-- name: QuerySnippet :many
+SELECT * from snippets
+WHERE user_id = $1
+ORDER BY created_at DESC
+LIMIT $2
+OFFSET $3;
+

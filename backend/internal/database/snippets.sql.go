@@ -144,6 +144,52 @@ func (q *Queries) GetSpecificSnippet(ctx context.Context, arg GetSpecificSnippet
 	return i, err
 }
 
+const querySnippet = `-- name: QuerySnippet :many
+SELECT id, title, code, language, tags, created_at, updated_at, user_id from snippets
+WHERE user_id = $1
+ORDER BY created_at DESC
+LIMIT $2
+OFFSET $3
+`
+
+type QuerySnippetParams struct {
+	UserID uuid.UUID
+	Limit  int32
+	Offset int32
+}
+
+func (q *Queries) QuerySnippet(ctx context.Context, arg QuerySnippetParams) ([]Snippet, error) {
+	rows, err := q.db.QueryContext(ctx, querySnippet, arg.UserID, arg.Limit, arg.Offset)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Snippet
+	for rows.Next() {
+		var i Snippet
+		if err := rows.Scan(
+			&i.ID,
+			&i.Title,
+			&i.Code,
+			&i.Language,
+			pq.Array(&i.Tags),
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.UserID,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const updateSnippet = `-- name: UpdateSnippet :one
 UPDATE snippets
 SET title = $1,

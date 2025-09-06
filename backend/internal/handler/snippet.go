@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/go-chi/chi/v5"
@@ -49,7 +50,16 @@ func (apiCfg *ApiConfig) CreateSnippetHandler(w http.ResponseWriter, r *http.Req
 }
 
 func (apiCfg *ApiConfig) GetAllSnippetsHandler(w http.ResponseWriter, r *http.Request, user database.User) {
-	snippets, err := apiCfg.DB.GetSnippetsOfUser(r.Context(), user.ID)
+	page, err := strconv.Atoi(r.URL.Query().Get("page"))
+	if err != nil || page < 1 {
+        page = 1 
+    }
+	offset := (page-1)*10
+	snippets, err := apiCfg.DB.QuerySnippet(r.Context(), database.QuerySnippetParams{
+		UserID: user.ID,
+		Limit: 10,
+		Offset: int32(offset),
+	})
 	if err != nil {
 		respondWithError(w, 400, fmt.Sprintf("Couldn't get snippets: %v", err))
 		return
