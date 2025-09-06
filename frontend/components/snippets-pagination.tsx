@@ -5,39 +5,23 @@ import {
     PaginationContent,
     PaginationItem,
 } from "@/components/ui/pagination"
-import { parseAsInteger, useQueryState } from "nuqs";
 import { Button } from "./ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-interface SnippetsPaginationProps {
-    refetchSnippets: () => Promise<void>;
-}
 
-export default function SnippetsPagination({
-    refetchSnippets
-}: SnippetsPaginationProps) {
 
-    const [offset, setOffset] = useQueryState(
-        "offset",
-        parseAsInteger.withDefault(1),
-    );
+export default function SnippetsPagination() {
 
-    const handleOffsetChange = (value: number) => {
-        setOffset(value)
-        setTimeout(() => {
-            refetchSnippets()
-        }, 300)
-    }
+
 
     return (
         <Pagination>
             <PaginationContent>
-                {offset > 1 && (
                     <>
                         <PaginationItem>
                             <Button
                                 variant="outline"
-                                onClick={() => handleOffsetChange(offset - 1)}
+                                
                             >
                                 <ChevronLeft className="size-4" /> Previous
                             </Button>
@@ -45,25 +29,22 @@ export default function SnippetsPagination({
                         <PaginationItem>
                             <Button
                                 variant="outline"
-                                onClick={() => handleOffsetChange(offset - 1)}
                             >
-                                {offset - 1}
                             </Button>
                         </PaginationItem>
                     </>
-                )}
+
                 <PaginationItem>
                     <Button
                         variant="outline"
                         disabled
                     >
-                        {offset}
+
                     </Button>
                 </PaginationItem>
                 <PaginationItem>
                     <Button
                         variant="outline"
-                        onClick={() => handleOffsetChange(offset + 1)}
                     >
                         <ChevronRight className="size-4" /> Next
                     </Button>

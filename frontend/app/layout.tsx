@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { NuqsAdapter } from 'nuqs/adapters/next/app'
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -29,9 +28,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <NuqsAdapter>
           {children}
-        </NuqsAdapter>
       </body>
     </html>
   );

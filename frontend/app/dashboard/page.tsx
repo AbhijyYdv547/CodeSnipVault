@@ -4,6 +4,7 @@ import SnippetsPagination from "@/components/snippets-pagination";
 import DashboardLayout from "@/components/DashboardLayout";
 
 export default async function DashboardPage() {
+    
     return (
         <DashboardLayout>
         <div className="flex flex-col gap-10 justify-center max-w-6xl mx-auto">
