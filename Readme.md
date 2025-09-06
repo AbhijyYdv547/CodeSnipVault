@@ -66,6 +66,10 @@ cd codesnipvault
 
 ### Backend Setup
 
+In the backend folder,
+ * Change .env.example file to .env
+ * Put the values in the .env file
+
 ```bash
 cd backend
 go mod tidy
@@ -81,6 +85,10 @@ go build && ./api
 ```
 
 ### Frontend Setup
+
+In the frontend folder,
+ * Change .env.example file to .env
+ * Put the values in the .env file
 
 ```bash
 cd frontend
