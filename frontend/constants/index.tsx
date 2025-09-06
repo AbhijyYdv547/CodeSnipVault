@@ -14,6 +14,7 @@ export const navItems = [
   { name: "Demo", link: "#demo" },
 ];
 
+
 export const features = [
   {
     title: "Centralized Snippet Storage",
@@ -57,7 +58,6 @@ export const features = [
   },
 ];
 
-
 export const workflowHighlights = [
   {
     index: 1,
@@ -84,10 +84,6 @@ export const workflowHighlights = [
     icon: <Users />,
   },
 ];
-
-
-
-
 
 export const problems = [
   {

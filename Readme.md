@@ -107,7 +107,7 @@ docker-compose up --build
 ## Roadmap
 
 * [X] Frontend authentication pages
-* [ ] Hook auth pages to endpoints
+* [X] Hook auth pages to endpoints
 * [X] Snippet dashboard 
 * [ ] Snippet Editor
 * [ ] Hook Dashboard and editor to endpoints
