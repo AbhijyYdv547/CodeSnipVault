@@ -40,10 +40,16 @@ DELETE from snippets
 WHERE user_id = $1
 AND id = $2;
 
--- name: QuerySnippet :many
-SELECT * from snippets
-WHERE user_id = $1
+-- name: FilterSnippets :many
+SELECT * FROM snippets
+WHERE user_id = $1 -- user_id
+AND ( ($2::text IS NULL OR title ILIKE '%' || $2 || '%' OR code ILIKE '%' || $2 || '%') ) -- search
+AND ( cardinality($3::text[]) = 0 OR tags && $3::text[] ) -- tags
+AND ( $4::text IS NULL OR language = $4 ) -- language
 ORDER BY created_at DESC
-LIMIT $2
-OFFSET $3;
+LIMIT $5 -- limit
+OFFSET $6; -- offset
+
+
+
 

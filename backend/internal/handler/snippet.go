@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/go-chi/chi/v5"
@@ -55,15 +56,32 @@ func (apiCfg *ApiConfig) GetAllSnippetsHandler(w http.ResponseWriter, r *http.Re
         page = 1 
     }
 	offset := (page-1)*10
-	snippets, err := apiCfg.DB.QuerySnippet(r.Context(), database.QuerySnippetParams{
+
+	searchStr := r.URL.Query().Get("search")
+
+	tagsParam := r.URL.Query().Get("tags")
+	var tags []string
+	if tagsParam != "" {
+		tags = strings.Split(tagsParam, ",")
+	}
+
+	languageStr := r.URL.Query().Get("language")
+
+
+	snippets, err := apiCfg.DB.FilterSnippets(r.Context(), database.FilterSnippetsParams{
 		UserID: user.ID,
+		Column2: searchStr,
+		Column3: tags,
+		Column4: languageStr,
 		Limit: 10,
 		Offset: int32(offset),
 	})
+
 	if err != nil {
 		respondWithError(w, 400, fmt.Sprintf("Couldn't get snippets: %v", err))
 		return
 	}
+
 	respondWithJSON(w, 201, snippets)
 }
 
@@ -129,15 +147,6 @@ func (apiCfg *ApiConfig) DeleteSnippetHandler(w http.ResponseWriter, r *http.Req
 	id, err := uuid.Parse(idStr)
 	if err != nil {
 		respondWithError(w, 400, fmt.Sprintf("No id for snippet present: %v", err))
-		return
-	}
-
-	decoder := json.NewDecoder(r.Body)
-
-	params := parameters{}
-	err = decoder.Decode(&params)
-	if err != nil {
-		respondWithError(w, 400, fmt.Sprintf("Error parsing JSON: %v", err))
 		return
 	}
 

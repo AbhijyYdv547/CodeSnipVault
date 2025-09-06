@@ -79,6 +79,65 @@ func (q *Queries) DeleteSnippet(ctx context.Context, arg DeleteSnippetParams) er
 	return err
 }
 
+const filterSnippets = `-- name: FilterSnippets :many
+SELECT id, title, code, language, tags, created_at, updated_at, user_id FROM snippets
+WHERE user_id = $1 -- user_id
+AND ( ($2::text IS NULL OR title ILIKE '%' || $2 || '%' OR code ILIKE '%' || $2 || '%') ) -- search
+AND ( cardinality($3::text[]) = 0 OR tags && $3::text[] ) -- tags
+AND ( $4::text IS NULL OR language = $4 ) -- language
+ORDER BY created_at DESC
+LIMIT $5 -- limit
+OFFSET $6
+`
+
+type FilterSnippetsParams struct {
+	UserID  uuid.UUID
+	Column2 string
+	Column3 []string
+	Column4 string
+	Limit   int32
+	Offset  int32
+}
+
+func (q *Queries) FilterSnippets(ctx context.Context, arg FilterSnippetsParams) ([]Snippet, error) {
+	rows, err := q.db.QueryContext(ctx, filterSnippets,
+		arg.UserID,
+		arg.Column2,
+		pq.Array(arg.Column3),
+		arg.Column4,
+		arg.Limit,
+		arg.Offset,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Snippet
+	for rows.Next() {
+		var i Snippet
+		if err := rows.Scan(
+			&i.ID,
+			&i.Title,
+			&i.Code,
+			&i.Language,
+			pq.Array(&i.Tags),
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.UserID,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getSnippetsOfUser = `-- name: GetSnippetsOfUser :many
 SELECT id, title, code, language, tags, created_at, updated_at, user_id from snippets
 WHERE user_id = $1
@@ -142,52 +201,6 @@ func (q *Queries) GetSpecificSnippet(ctx context.Context, arg GetSpecificSnippet
 		&i.UserID,
 	)
 	return i, err
-}
-
-const querySnippet = `-- name: QuerySnippet :many
-SELECT id, title, code, language, tags, created_at, updated_at, user_id from snippets
-WHERE user_id = $1
-ORDER BY created_at DESC
-LIMIT $2
-OFFSET $3
-`
-
-type QuerySnippetParams struct {
-	UserID uuid.UUID
-	Limit  int32
-	Offset int32
-}
-
-func (q *Queries) QuerySnippet(ctx context.Context, arg QuerySnippetParams) ([]Snippet, error) {
-	rows, err := q.db.QueryContext(ctx, querySnippet, arg.UserID, arg.Limit, arg.Offset)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []Snippet
-	for rows.Next() {
-		var i Snippet
-		if err := rows.Scan(
-			&i.ID,
-			&i.Title,
-			&i.Code,
-			&i.Language,
-			pq.Array(&i.Tags),
-			&i.CreatedAt,
-			&i.UpdatedAt,
-			&i.UserID,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
 }
 
 const updateSnippet = `-- name: UpdateSnippet :one
