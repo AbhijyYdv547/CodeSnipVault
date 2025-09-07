@@ -1,14 +1,12 @@
 #!/bin/sh
 
-echo "🔍 Running Pre-commit checks..."
 
-
-echo "🧹 Formatting Go code..."
+echo "Formatting Go code..."
 cd backend || exit 1
 go fmt ./...
 cd ..
 
-echo "🎨 Running Prettier via lint-staged..."
+echo "Running Prettier via lint-staged..."
 npx lint-staged
 
 echo "✅ Pre-commit checks passed!"
