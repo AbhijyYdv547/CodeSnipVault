@@ -32,6 +32,7 @@ interface Snippet {
   updated_at: string;
   user_id: string;
 }
+
 interface SnippetCardProps {
   snippet: Snippet;
 }
