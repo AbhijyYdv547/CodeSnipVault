@@ -1,74 +1,96 @@
-import { Snippet } from "./shared/types";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "./ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "./ui/card";
 import { Button } from "./ui/button";
 import { BookOpen, Share2Icon } from "lucide-react";
 import { BadgeDemo } from "./snippet-badge";
 import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
+interface Snippet {
+  id: string;
+  title: string;
+  code: string;
+  language: string;
+  tags: string[];
+  created_at: string;
+  updated_at: string;
+  user_id: string;
+}
 interface SnippetCardProps {
-    snippet: Snippet
+  snippet: Snippet;
 }
 
 export default function SnippetCard({ snippet }: SnippetCardProps) {
-    return (
-        <Card key={snippet.id} className="flex flex-col justify-between">
-            <CardHeader>
-                <div className="p-3">
-                    <CardTitle>{snippet.title}</CardTitle>
+  return (
+    <Card key={snippet.id} className="flex flex-col justify-between">
+      <CardHeader>
+        <div className="p-3">
+          <CardTitle>{snippet.title}</CardTitle>
+        </div>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-2">
+        <CardDescription>{snippet.code.slice(0, 80)}...</CardDescription>
+        <BadgeDemo />
+      </CardContent>
+      <CardFooter className="flex justify-between">
+        <Button className="cursor-pointer">
+          <Share2Icon className="size-4" />
+        </Button>
+        <Dialog>
+          <form>
+            <DialogTrigger asChild>
+              <Button variant="outline">
+                <BookOpen className="size-4" />
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Edit profile</DialogTitle>
+                <DialogDescription>
+                  Make changes to your profile here. Click save when you&apos;re
+                  done.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="grid gap-4">
+                <div className="grid gap-3">
+                  <Label htmlFor="name-1">Name</Label>
+                  <Input id="name-1" name="name" defaultValue="Pedro Duarte" />
                 </div>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-2">
-                <CardDescription>{snippet.description.slice(0,80)}...</CardDescription>
-                <BadgeDemo/>
-            </CardContent>
-            <CardFooter className="flex justify-between">
-                <Button className="cursor-pointer">
-                    <Share2Icon className="size-4"/>
-                </Button>
-                <Dialog>
-                    <form>
-                        <DialogTrigger asChild>
-                            <Button variant="outline"><BookOpen className="size-4" /></Button>
-                        </DialogTrigger>
-                        <DialogContent className="sm:max-w-[425px]">
-                            <DialogHeader>
-                                <DialogTitle>Edit profile</DialogTitle>
-                                <DialogDescription>
-                                    Make changes to your profile here. Click save when you&apos;re
-                                    done.
-                                </DialogDescription>
-                            </DialogHeader>
-                            <div className="grid gap-4">
-                                <div className="grid gap-3">
-                                    <Label htmlFor="name-1">Name</Label>
-                                    <Input id="name-1" name="name" defaultValue="Pedro Duarte" />
-                                </div>
-                                <div className="grid gap-3">
-                                    <Label htmlFor="username-1">Username</Label>
-                                    <Input id="username-1" name="username" defaultValue="@peduarte" />
-                                </div>
-                            </div>
-                            <DialogFooter>
-                                <DialogClose asChild>
-                                    <Button variant="outline">Cancel</Button>
-                                </DialogClose>
-                                <Button type="submit">Save changes</Button>
-                            </DialogFooter>
-                        </DialogContent>
-                    </form>
-                </Dialog>
-            </CardFooter>
-        </Card>
-    );
+                <div className="grid gap-3">
+                  <Label htmlFor="username-1">Username</Label>
+                  <Input
+                    id="username-1"
+                    name="username"
+                    defaultValue="@peduarte"
+                  />
+                </div>
+              </div>
+              <DialogFooter>
+                <DialogClose asChild>
+                  <Button variant="outline">Cancel</Button>
+                </DialogClose>
+                <Button type="submit">Save changes</Button>
+              </DialogFooter>
+            </DialogContent>
+          </form>
+        </Dialog>
+      </CardFooter>
+    </Card>
+  );
 }
