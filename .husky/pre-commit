@@ -1,0 +1,16 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo "🔍 Running Pre-commit checks..."
+
+# Step 1: Run go fmt
+echo "🧹 Formatting Go code..."
+cd backend || exit 1
+go fmt ./...
+cd ..
+
+# Step 2: Run lint-staged (prettier on staged frontend files)
+echo "🎨 Running Prettier via lint-staged..."
+npx lint-staged
+
+echo "✅ Pre-commit checks passed!"

@@ -1,0 +1,29 @@
+{
+  "name": "codesnipvault",
+  "version": "1.0.0",
+  "description": "CodeSnipVault is a web application for managing and sharing code snippets. Users can log in, create and organize their snippets by language and type, and optionally share them through unique public links.",
+  "main": "index.js",
+"scripts": {
+  "prepare": "husky"
+},
+  "lint-staged": {
+    "frontend/**/*.{ts,tsx,js,jsx}": [
+      "prettier --write"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AbhijyYdv547/CodeSnipVault.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/AbhijyYdv547/CodeSnipVault/issues"
+  },
+  "homepage": "https://github.com/AbhijyYdv547/CodeSnipVault#readme",
+  "devDependencies": {
+    "husky": "^9.1.7"
+  }
+}

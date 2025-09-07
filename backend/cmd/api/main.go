@@ -45,15 +45,15 @@ func main() {
 		log.Fatal("PORT is not found in the .env")
 	}
 
-	dbURL := os.Getenv("DB_URL")
-	if dbURL == "" {
-		log.Fatal("DB_URL is not found in the .env")
-	}
+dbURL := os.Getenv("DB_URL")
+if dbURL == "" {
+log.Fatal("DB_URL is not found in the .env")
+}
 
-	conn,err := sql.Open("postgres",dbURL)
-	if err!=nil {
-		log.Fatal("Can't connect to database")
-	}
+conn,err := sql.Open("postgres",dbURL)
+if err!=nil {
+log.Fatal("Can't connect to database")
+}
 	
 	db := database.New(conn)
 	apiCfg := &handler.ApiConfig{
