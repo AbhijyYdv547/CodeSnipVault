@@ -1,32 +1,16 @@
 "use client";
 import { fetchSnippets } from "@/lib/api";
 import { useEffect, useState } from "react";
-import { Input } from "./ui/input";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
 import SnippetCard from "./snippet-card";
-import {
-    Pagination,
-    PaginationContent,
-    PaginationItem,
-} from "@/components/ui/pagination"
-import { Button } from "./ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useSnippetStore } from "@/store/SnippetStore";
+import SnippetsFilter from "./snippets-filter";
+import SnippetsPagination from "./snippets-pagination";
 
 
 export default function SnippetList() {
     const [snippets, setSnippets] = useState([])
-    const [loading, setLoading] = useState(true)
 
-    const [search, setSearch] = useState('')
-    const [tags, setTags] = useState<string[]>([])
-    const [language, setLanguage] = useState('')
-    const [page, setPage] = useState(1)
+    const {search,tags,language,page,loading,setLoading} = useSnippetStore();
 
     useEffect(() => {
         setLoading(true)
@@ -34,44 +18,12 @@ export default function SnippetList() {
             .then((data) => setSnippets(data.data))
             .catch((err) => console.log(err))
             .finally(() => setLoading(false))
-    }, [page, search, tags, language])
+    }, [page, search, tags, language,setLoading])
 
 
     return (
         <div>
-            <div className="flex gap-2">
-                    <Input
-                        placeholder="Search snippets"
-                        className="w-full"
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                    />
-
-                    <Input
-                        placeholder="Tags (comma seperated)"
-                        className="w-full"
-                        onBlur={(e) => {
-                            setTags(e.target.value.split(',').map((tag) => tag.trim()))
-                        }}
-                    />
-                    <Select
-                        value={language}
-                        onValueChange={(value) => setLanguage(value)}
-                    >
-                        <SelectTrigger className="w-[180px]">
-                            <SelectValue placeholder="Language" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="JS/TS">Javascript/Typescript</SelectItem>
-                            <SelectItem value="Java">Java</SelectItem>
-                            <SelectItem value="CPP">C++</SelectItem>
-                            <SelectItem value="GO">Golang</SelectItem>
-                            <SelectItem value="PY">Python</SelectItem>
-                            <SelectItem value="PHP">PHP</SelectItem>
-                        </SelectContent>
-                    </Select>
-
-            </div>
+            <SnippetsFilter/>
 
             {loading ? (
                 <p>Loading...</p>
@@ -88,46 +40,7 @@ export default function SnippetList() {
 
             )}
 
-            <Pagination>
-                <PaginationContent>
-                    {page > 1 && (
-                        <>
-                            <PaginationItem>
-                                <Button
-                                    variant="outline"
-                                    onClick={() => setPage(page - 1)}
-                                >
-                                    <ChevronLeft className="size-4" /> Previous
-                                </Button>
-                            </PaginationItem>
-                            <PaginationItem>
-                                <Button
-                                    variant="outline"
-                                    onClick={() => setPage(page - 1)}
-                                >
-                                    {page - 1}
-                                </Button>
-                            </PaginationItem>
-                        </>
-                    )}
-                    <PaginationItem>
-                        <Button
-                            variant="outline"
-                            disabled
-                        >
-                            {page}
-                        </Button>
-                    </PaginationItem>
-                    <PaginationItem>
-                        <Button
-                            variant="outline"
-                            onClick={() => setPage(page + 1)}
-                        >
-                            <ChevronRight className="size-4" /> Next
-                        </Button>
-                    </PaginationItem>
-                </PaginationContent>
-            </Pagination>
+            <SnippetsPagination/>
         </div>
     )
 }

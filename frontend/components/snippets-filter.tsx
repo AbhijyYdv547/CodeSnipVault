@@ -1,5 +1,6 @@
 "use client";
 
+import { useSnippetStore } from "@/store/SnippetStore";
 import { Input } from "./ui/input";
 import {
     Select,
@@ -12,16 +13,27 @@ import {
 
 export default function SnippetsFilter() {
 
+    const {search,setSearch,setTags,language,setLanguage} = useSnippetStore();
+
     return (
-        <div>
-            <div>
-            <Input 
-                placeholder="Search" 
-                className="w-full" 
+        <div className="flex gap-2">
+            <Input
+                placeholder="Search snippets"
+                className="w-full"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
             />
-            </div>
-            <div>
+
+            <Input
+                placeholder="Tags (comma seperated)"
+                className="w-full"
+                onBlur={(e) => {
+                    setTags(e.target.value.split(',').map((tag) => tag.trim()))
+                }}
+            />
             <Select
+                value={language}
+                onValueChange={(value) => setLanguage(value)}
             >
                 <SelectTrigger className="w-[180px]">
                     <SelectValue placeholder="Language" />
@@ -35,7 +47,7 @@ export default function SnippetsFilter() {
                     <SelectItem value="PHP">PHP</SelectItem>
                 </SelectContent>
             </Select>
-            </div>
+
         </div>
     );
 }
