@@ -21,7 +21,7 @@ func GetApi(apiCfg *handler.ApiConfig) http.Handler {
 	}))
 	r.Use(middleware.Logger)
 
-	routerHandler(r,apiCfg)
+	routerHandler(r, apiCfg)
 
 	return r
 }

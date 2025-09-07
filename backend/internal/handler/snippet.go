@@ -13,12 +13,12 @@ import (
 	"github.com/google/uuid"
 )
 
-	type parameters struct {
-		Title    string   `json:"title"`
-		Code     string   `json:"code"`
-		Language string   `json:"language"`
-		Tags     []string `json:"tags"`
-	}
+type parameters struct {
+	Title    string   `json:"title"`
+	Code     string   `json:"code"`
+	Language string   `json:"language"`
+	Tags     []string `json:"tags"`
+}
 
 func (apiCfg *ApiConfig) CreateSnippetHandler(w http.ResponseWriter, r *http.Request, user database.User) {
 
@@ -53,9 +53,9 @@ func (apiCfg *ApiConfig) CreateSnippetHandler(w http.ResponseWriter, r *http.Req
 func (apiCfg *ApiConfig) GetAllSnippetsHandler(w http.ResponseWriter, r *http.Request, user database.User) {
 	page, err := strconv.Atoi(r.URL.Query().Get("page"))
 	if err != nil || page < 1 {
-        page = 1 
-    }
-	offset := (page-1)*10
+		page = 1
+	}
+	offset := (page - 1) * 10
 
 	searchStr := r.URL.Query().Get("search")
 
@@ -67,14 +67,13 @@ func (apiCfg *ApiConfig) GetAllSnippetsHandler(w http.ResponseWriter, r *http.Re
 
 	languageStr := r.URL.Query().Get("language")
 
-
 	snippets, err := apiCfg.DB.FilterSnippets(r.Context(), database.FilterSnippetsParams{
-		UserID: user.ID,
+		UserID:  user.ID,
 		Column2: searchStr,
 		Column3: tags,
 		Column4: languageStr,
-		Limit: 10,
-		Offset: int32(offset),
+		Limit:   10,
+		Offset:  int32(offset),
 	})
 
 	if err != nil {
@@ -103,7 +102,7 @@ func (apiCfg *ApiConfig) GetSnippetHandler(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	respondWithJSON(w,200,snippet)
+	respondWithJSON(w, 200, snippet)
 }
 
 func (apiCfg *ApiConfig) UpdateSnippetHandler(w http.ResponseWriter, r *http.Request, user database.User) {
@@ -115,7 +114,6 @@ func (apiCfg *ApiConfig) UpdateSnippetHandler(w http.ResponseWriter, r *http.Req
 		return
 	}
 
-
 	decoder := json.NewDecoder(r.Body)
 
 	params := parameters{}
@@ -126,19 +124,19 @@ func (apiCfg *ApiConfig) UpdateSnippetHandler(w http.ResponseWriter, r *http.Req
 	}
 
 	updatedSnippet, err := apiCfg.DB.UpdateSnippet(r.Context(), database.UpdateSnippetParams{
-		Title: params.Title,
-		Code: params.Code,
+		Title:    params.Title,
+		Code:     params.Code,
 		Language: params.Language,
-		Tags: params.Tags,
-		UserID: user.ID,
-		ID: id,
+		Tags:     params.Tags,
+		UserID:   user.ID,
+		ID:       id,
 	})
 	if err != nil {
 		respondWithError(w, 400, fmt.Sprintf("Error updating snippet: %v", err))
 		return
 	}
 
-	respondWithJSON(w,200,updatedSnippet)
+	respondWithJSON(w, 200, updatedSnippet)
 }
 
 func (apiCfg *ApiConfig) DeleteSnippetHandler(w http.ResponseWriter, r *http.Request, user database.User) {
@@ -152,12 +150,12 @@ func (apiCfg *ApiConfig) DeleteSnippetHandler(w http.ResponseWriter, r *http.Req
 
 	err = apiCfg.DB.DeleteSnippet(r.Context(), database.DeleteSnippetParams{
 		UserID: user.ID,
-		ID: id,
+		ID:     id,
 	})
 	if err != nil {
 		respondWithError(w, 400, fmt.Sprintf("Error deleting snippet: %v", err))
 		return
 	}
 
-	respondWithJSON(w,200,"Snippet Deleted")
+	respondWithJSON(w, 200, "Snippet Deleted")
 }
