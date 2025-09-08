@@ -34,6 +34,8 @@ import { TagsInput } from "@/components/ui/tags-input";
 
 import { Switch } from "@/components/ui/switch";
 import { CodeBlock } from "./ui/code-block";
+import { useState } from "react";
+import { Textarea } from "@/components/ui/textarea";
 
 const formSchema = z.object({
   Title: z.string().min(1),
@@ -84,10 +86,18 @@ export default function SnippetForm() {
       value: "zh",
     },
   ] as const;
+
+  const [lang, setLang] = useState("");
+  const [title, setTitle] = useState("");
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      Title: "",
+      Language: "",
       Tags: ["test"],
+      Code: "",
+      Share: false,
     },
   });
 
@@ -118,7 +128,15 @@ export default function SnippetForm() {
             <FormItem>
               <FormLabel>Title</FormLabel>
               <FormControl>
-                <Input placeholder="Title" type="" {...field} />
+                <Input
+                  placeholder="Title"
+                  type=""
+                  {...field}
+                  onChange={(e) => {
+                    field.onChange(e);
+                    setTitle(e.target.value);
+                  }}
+                />
               </FormControl>
               <FormDescription>
                 This is the name of the code snippet.
@@ -135,7 +153,12 @@ export default function SnippetForm() {
               <FormLabel>Language</FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
-                  <FormControl>
+                  <FormControl
+                    onSelect={() => {
+                      form.setValue("Language", field.value);
+                      setLang(field.value);
+                    }}
+                  >
                     <Button
                       variant="outline"
                       role="combobox"
@@ -217,18 +240,23 @@ export default function SnippetForm() {
             <FormItem>
               <FormLabel>Code</FormLabel>
               <FormControl>
-                <CodeBlock
-                  code={field.name}
-                  language={languages[0].toString()}
-                  filename="hello.tsx"
+                <Textarea
+                  className="resize-none"
+                  placeholder="Write your code here..."
+                  value={field.value}
+                  onChange={(e) => field.onChange(e.target.value)}
                 />
               </FormControl>
-              <FormDescription>
-                You can @mention other users and organizations.
-              </FormDescription>
+              <FormDescription>Your snippet.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
+        />
+        <div className="font-semibold m-0">Code Preview</div>
+        <CodeBlock
+          code={form.watch("Code") || ""}
+          language={lang}
+          filename={title}
         />
 
         <FormField
@@ -246,8 +274,6 @@ export default function SnippetForm() {
                 <Switch
                   checked={field.value}
                   onCheckedChange={field.onChange}
-                  disabled
-                  aria-readonly
                 />
               </FormControl>
             </FormItem>
