@@ -27,6 +27,7 @@ interface TagsInputProps extends React.HTMLAttributes<HTMLDivElement> {
 
 interface TagsInputContextProps {
   value: string[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onValueChange: (value: any) => void;
   inputValue: string;
   setInputValue: React.Dispatch<React.SetStateAction<string>>;
