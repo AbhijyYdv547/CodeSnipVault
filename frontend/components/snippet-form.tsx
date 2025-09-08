@@ -6,6 +6,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import CodeMirror from "@uiw/react-codemirror";
+import { dracula } from "@uiw/codemirror-theme-dracula";
 import {
   Form,
   FormControl,
@@ -33,9 +35,7 @@ import { Check, ChevronsUpDown } from "lucide-react";
 import { TagsInput } from "@/components/ui/tags-input";
 
 import { Switch } from "@/components/ui/switch";
-import { CodeBlock } from "./ui/code-block";
-import { useState } from "react";
-import { Textarea } from "@/components/ui/textarea";
+import { languages } from "@/constants";
 
 const formSchema = z.object({
   Title: z.string().min(1),
@@ -48,48 +48,6 @@ const formSchema = z.object({
 });
 
 export default function SnippetForm() {
-  const languages = [
-    {
-      label: "English",
-      value: "en",
-    },
-    {
-      label: "French",
-      value: "fr",
-    },
-    {
-      label: "German",
-      value: "de",
-    },
-    {
-      label: "Spanish",
-      value: "es",
-    },
-    {
-      label: "Portuguese",
-      value: "pt",
-    },
-    {
-      label: "Russian",
-      value: "ru",
-    },
-    {
-      label: "Japanese",
-      value: "ja",
-    },
-    {
-      label: "Korean",
-      value: "ko",
-    },
-    {
-      label: "Chinese",
-      value: "zh",
-    },
-  ] as const;
-
-  const [lang, setLang] = useState("");
-  const [title, setTitle] = useState("");
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -128,15 +86,7 @@ export default function SnippetForm() {
             <FormItem>
               <FormLabel>Title</FormLabel>
               <FormControl>
-                <Input
-                  placeholder="Title"
-                  type=""
-                  {...field}
-                  onChange={(e) => {
-                    field.onChange(e);
-                    setTitle(e.target.value);
-                  }}
-                />
+                <Input placeholder="Title" type="text" {...field} />
               </FormControl>
               <FormDescription>
                 This is the name of the code snippet.
@@ -153,12 +103,7 @@ export default function SnippetForm() {
               <FormLabel>Language</FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
-                  <FormControl
-                    onSelect={() => {
-                      form.setValue("Language", field.value);
-                      setLang(field.value);
-                    }}
-                  >
+                  <FormControl>
                     <Button
                       variant="outline"
                       role="combobox"
@@ -187,7 +132,9 @@ export default function SnippetForm() {
                             value={language.label}
                             key={language.value}
                             onSelect={() => {
-                              form.setValue("Language", language.value);
+                              form.setValue("Language", language.value, {
+                                shouldValidate: true,
+                              });
                             }}
                           >
                             <Check
@@ -240,23 +187,18 @@ export default function SnippetForm() {
             <FormItem>
               <FormLabel>Code</FormLabel>
               <FormControl>
-                <Textarea
-                  className="resize-none"
-                  placeholder="Write your code here..."
+                <CodeMirror
                   value={field.value}
-                  onChange={(e) => field.onChange(e.target.value)}
+                  theme={dracula}
+                  placeholder="Write your code here..."
+                  height="500px"
+                  onChange={(value) => field.onChange(value)}
                 />
               </FormControl>
               <FormDescription>Your snippet.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
-        />
-        <div className="font-semibold m-0">Code Preview</div>
-        <CodeBlock
-          code={form.watch("Code") || ""}
-          language={lang}
-          filename={title}
         />
 
         <FormField
@@ -279,7 +221,9 @@ export default function SnippetForm() {
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button type="submit" disabled={form.formState.isSubmitting}>
+          {form.formState.isSubmitting ? "Submitting..." : "Submit"}
+        </Button>
       </form>
     </Form>
   );

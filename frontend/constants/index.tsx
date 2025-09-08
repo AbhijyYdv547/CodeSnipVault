@@ -2,10 +2,16 @@ import {
   FileText,
   LayoutDashboard,
   Layers,
-  AlertCircle, FileMinus, Share2, Search,
-  Code2, Shield, Cloud, Tags, Users
+  AlertCircle,
+  FileMinus,
+  Share2,
+  Search,
+  Code2,
+  Shield,
+  Cloud,
+  Tags,
+  Users,
 } from "lucide-react";
-
 
 export const navItems = [
   { name: "About", link: "#about" },
@@ -14,21 +20,23 @@ export const navItems = [
   { name: "Demo", link: "#demo" },
 ];
 
-
 export const features = [
   {
     title: "Centralized Snippet Storage",
-    description: "Save and organize all your code snippets in one secure vault.",
+    description:
+      "Save and organize all your code snippets in one secure vault.",
     icon: <Code2 />,
   },
   {
     title: "Powerful Search & Tags",
-    description: "Find snippets instantly with smart search and custom tagging.",
+    description:
+      "Find snippets instantly with smart search and custom tagging.",
     icon: <Search />,
   },
   {
     title: "Collaborative Sharing",
-    description: "Share snippets with your team or keep them private — your choice.",
+    description:
+      "Share snippets with your team or keep them private — your choice.",
     icon: <Share2 />,
   },
   {
@@ -48,12 +56,14 @@ export const features = [
   },
   {
     title: "Snippet Metadata",
-    description: "Attach tags, language, and context to every snippet for clarity.",
+    description:
+      "Attach tags, language, and context to every snippet for clarity.",
     icon: <Tags />,
   },
   {
     title: "Team Collaboration",
-    description: "Work together with real-time snippet updates and discussions.",
+    description:
+      "Work together with real-time snippet updates and discussions.",
     icon: <Users />,
   },
 ];
@@ -62,19 +72,22 @@ export const workflowHighlights = [
   {
     index: 1,
     title: "Instant Access",
-    description: "Quickly retrieve snippets with blazing-fast search and filtering.",
+    description:
+      "Quickly retrieve snippets with blazing-fast search and filtering.",
     icon: <FileText />,
   },
   {
     index: 2,
     title: "Organized Workflow",
-    description: "Tag, categorize, and structure snippets for effortless navigation.",
+    description:
+      "Tag, categorize, and structure snippets for effortless navigation.",
     icon: <Layers />,
   },
   {
     index: 3,
     title: "Secure Vault",
-    description: "Snippets are stored safely with encryption and role-based access.",
+    description:
+      "Snippets are stored safely with encryption and role-based access.",
     icon: <Shield />,
   },
   {
@@ -120,5 +133,32 @@ export const solutions = [
   {
     title: "Search and filter snippets instantly",
     icon: <Search />,
+  },
+];
+
+export const languages = [
+  {
+    label: "Javascript/Typescript",
+    value: "JS/TS",
+  },
+  {
+    label: "Java",
+    value: "Java",
+  },
+  {
+    label: "C++",
+    value: "CPP",
+  },
+  {
+    label: "Golang",
+    value: "GO",
+  },
+  {
+    label: "Python",
+    value: "PY",
+  },
+  {
+    label: "PHP",
+    value: "PHP",
   },
 ];
