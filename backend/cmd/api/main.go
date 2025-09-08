@@ -37,7 +37,7 @@ func gracefulShutdown(apiServer *http.Server, done chan bool) {
 }
 
 func main() {
-	godotenv.Load("../../.env")
+	godotenv.Load()
 
 	portString := os.Getenv("PORT")
 	if portString == "" {

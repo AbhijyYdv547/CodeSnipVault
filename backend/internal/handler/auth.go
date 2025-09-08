@@ -13,7 +13,7 @@ import (
 )
 
 func getSecret() []byte {
-	_ = godotenv.Load("../../.env")
+	_ = godotenv.Load()
 	secret := os.Getenv("JWT_SECRET")
 	if secret == "" {
 		log.Fatal("JWT_SECRET is not found in the .env")
