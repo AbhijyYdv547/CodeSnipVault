@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import CodeMirror from "@uiw/react-codemirror";
 import { dracula } from "@uiw/codemirror-theme-dracula";
+import axios from "@/lib/axios";
 import {
   Form,
   FormControl,
@@ -59,9 +60,19 @@ export default function SnippetForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      console.log(values);
+      const res = await axios.post("/v1/snippets/create", {
+        Title: values.Title,
+        Language: values.Language,
+        Tags: values.Tags,
+        Code: values.Code,
+        Share: values.Share,
+      });
+      if (!res) {
+        toast.error("Failed to create form. Please try again.");
+        return;
+      }
       toast(
         <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
           <code className="text-white">{JSON.stringify(values, null, 2)}</code>

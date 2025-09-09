@@ -23,11 +23,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 interface Snippet {
-  id: string;
-  title: string;
-  code: string;
-  language: string;
-  tags: string[];
+  Id: string;
+  Title: string;
+  Code: string;
+  Language: string;
+  Tags: string[];
   created_at: string;
   updated_at: string;
   user_id: string;
@@ -39,14 +39,14 @@ interface SnippetCardProps {
 
 export default function SnippetCard({ snippet }: SnippetCardProps) {
   return (
-    <Card key={snippet.id} className="flex flex-col justify-between">
+    <Card key={snippet.Id} className="flex flex-col justify-between">
       <CardHeader>
         <div className="p-3">
-          <CardTitle>{snippet.title}</CardTitle>
+          <CardTitle>{snippet.Title}</CardTitle>
         </div>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
-        <CardDescription>{snippet.code.slice(0, 80)}...</CardDescription>
+        <CardDescription>{snippet.Code.slice(0, 80)}...</CardDescription>
         <BadgeDemo />
       </CardContent>
       <CardFooter className="flex justify-between">

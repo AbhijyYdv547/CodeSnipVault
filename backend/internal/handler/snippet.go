@@ -4,6 +4,7 @@ import (
 	"backend/internal/database"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -47,7 +48,6 @@ func (apiCfg *ApiConfig) CreateSnippetHandler(w http.ResponseWriter, r *http.Req
 	}
 
 	respondWithJSON(w, 201, snippet)
-
 }
 
 func (apiCfg *ApiConfig) GetAllSnippetsHandler(w http.ResponseWriter, r *http.Request, user database.User) {
@@ -57,15 +57,18 @@ func (apiCfg *ApiConfig) GetAllSnippetsHandler(w http.ResponseWriter, r *http.Re
 	}
 	offset := (page - 1) * 10
 
-	searchStr := r.URL.Query().Get("search")
+	searchStr := strings.TrimSpace(r.URL.Query().Get("search"))
 
 	tagsParam := r.URL.Query().Get("tags")
 	var tags []string
 	if tagsParam != "" {
 		tags = strings.Split(tagsParam, ",")
+		for i, t := range tags {
+			tags[i] = strings.ToLower(strings.TrimSpace(t))
+		}
 	}
 
-	languageStr := r.URL.Query().Get("language")
+	languageStr := strings.ToLower(strings.TrimSpace(r.URL.Query().Get("language")))
 
 	snippets, err := apiCfg.DB.FilterSnippets(r.Context(), database.FilterSnippetsParams{
 		UserID:  user.ID,
@@ -81,7 +84,12 @@ func (apiCfg *ApiConfig) GetAllSnippetsHandler(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	respondWithJSON(w, 201, snippets)
+	log.Printf("FilterSnippetsParams - UserID: %v, Search: '%v', Tags: %v, Language: '%v', Limit: %d, Offset: %d",
+		user.ID, searchStr, tags, languageStr, 10, offset)
+
+	respondWithJSON(w, 200, map[string]interface{}{
+		"data": snippets,
+	})
 }
 
 func (apiCfg *ApiConfig) GetSnippetHandler(w http.ResponseWriter, r *http.Request, user database.User) {

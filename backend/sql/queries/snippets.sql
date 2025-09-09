@@ -15,7 +15,9 @@ RETURNING *;
 -- name: GetSnippetsOfUser :many
 SELECT * from snippets
 WHERE user_id = $1
-ORDER BY created_at DESC;
+ORDER BY created_at DESC
+LIMIT $2
+OFFSET $3;
 
 
 -- name: GetSpecificSnippet :one
@@ -42,13 +44,15 @@ AND id = $2;
 
 -- name: FilterSnippets :many
 SELECT * FROM snippets
-WHERE user_id = $1 -- user_id
-AND ( ($2::text IS NULL OR title ILIKE '%' || $2 || '%' OR code ILIKE '%' || $2 || '%') ) -- search
-AND ( cardinality($3::text[]) = 0 OR tags && $3::text[] ) -- tags
-AND ( $4::text IS NULL OR language = $4 ) -- language
+WHERE user_id = $1
+  AND ($2 = '' OR title ILIKE '%' || $2 || '%' OR code ILIKE '%' || $2 || '%')
+  AND (cardinality($3::text[]) = 0 OR tags && $3::text[])
+  AND ($4 = '' OR language = $4)
 ORDER BY created_at DESC
-LIMIT $5 -- limit
-OFFSET $6; -- offset
+LIMIT $5
+OFFSET $6;
+
+
 
 
 

@@ -81,20 +81,20 @@ func (q *Queries) DeleteSnippet(ctx context.Context, arg DeleteSnippetParams) er
 
 const filterSnippets = `-- name: FilterSnippets :many
 SELECT id, title, code, language, tags, created_at, updated_at, user_id FROM snippets
-WHERE user_id = $1 -- user_id
-AND ( ($2::text IS NULL OR title ILIKE '%' || $2 || '%' OR code ILIKE '%' || $2 || '%') ) -- search
-AND ( cardinality($3::text[]) = 0 OR tags && $3::text[] ) -- tags
-AND ( $4::text IS NULL OR language = $4 ) -- language
+WHERE user_id = $1
+  AND ($2 = '' OR title ILIKE '%' || $2 || '%' OR code ILIKE '%' || $2 || '%')
+  AND (cardinality($3::text[]) = 0 OR tags && $3::text[])
+  AND ($4 = '' OR language = $4)
 ORDER BY created_at DESC
-LIMIT $5 -- limit
+LIMIT $5
 OFFSET $6
 `
 
 type FilterSnippetsParams struct {
 	UserID  uuid.UUID
-	Column2 string
+	Column2 interface{}
 	Column3 []string
-	Column4 string
+	Column4 interface{}
 	Limit   int32
 	Offset  int32
 }
@@ -142,10 +142,18 @@ const getSnippetsOfUser = `-- name: GetSnippetsOfUser :many
 SELECT id, title, code, language, tags, created_at, updated_at, user_id from snippets
 WHERE user_id = $1
 ORDER BY created_at DESC
+LIMIT $2
+OFFSET $3
 `
 
-func (q *Queries) GetSnippetsOfUser(ctx context.Context, userID uuid.UUID) ([]Snippet, error) {
-	rows, err := q.db.QueryContext(ctx, getSnippetsOfUser, userID)
+type GetSnippetsOfUserParams struct {
+	UserID uuid.UUID
+	Limit  int32
+	Offset int32
+}
+
+func (q *Queries) GetSnippetsOfUser(ctx context.Context, arg GetSnippetsOfUserParams) ([]Snippet, error) {
+	rows, err := q.db.QueryContext(ctx, getSnippetsOfUser, arg.UserID, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}

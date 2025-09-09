@@ -15,7 +15,10 @@ export default function SnippetList() {
   useEffect(() => {
     setLoading(true);
     fetchSnippets({ page, search, tags, language })
-      .then((data) => setSnippets(data.data))
+      .then((res) => {
+        console.log(res.data.data);
+        setSnippets(res.data.data);
+      })
       .catch((err) => console.log(err))
       .finally(() => setLoading(false));
   }, [page, search, tags, language, setLoading]);
