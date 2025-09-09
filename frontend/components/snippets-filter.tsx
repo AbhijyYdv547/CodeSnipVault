@@ -10,28 +10,48 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { languages } from "@/constants";
+import { Button } from "./ui/button";
+import { useState } from "react";
 
 export default function SnippetsFilter() {
-  const { search, setSearch, setTags, language, setLanguage } =
-    useSnippetStore();
+  const { setSearch, setTags, setLanguage, setPage } = useSnippetStore();
+
+  const [localSearch, setLocalSearch] = useState("");
+  const [localTags, setLocalTags] = useState("");
+  const [localLanguage, setLocalLanguage] = useState("");
+
+  const handleSearch = () => {
+    setPage(1);
+    setSearch(localSearch.trim());
+    setTags(
+      localTags
+        .split(",")
+        .map((tag) => tag.trim().toLowerCase())
+        .filter((tag) => tag.length > 0),
+    );
+    setLanguage(localLanguage);
+  };
 
   return (
     <div className="flex gap-2">
       <Input
         placeholder="Search snippets"
         className="w-full"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
+        value={localSearch}
+        onChange={(e) => setLocalSearch(e.target.value)}
       />
 
       <Input
-        placeholder="Tags (comma seperated)"
-        className="w-full"
-        onBlur={(e) => {
-          setTags(e.target.value.split(",").map((tag) => tag.trim()));
-        }}
+        placeholder="Tags (comma separated)"
+        className="w-full md:w-auto"
+        value={localTags}
+        onChange={(e) => setLocalTags(e.target.value)}
       />
-      <Select value={language} onValueChange={(value) => setLanguage(value)}>
+
+      <Select
+        value={localLanguage}
+        onValueChange={(value) => setLocalLanguage(value)}
+      >
         <SelectTrigger className="w-[180px]">
           <SelectValue placeholder="Language" />
         </SelectTrigger>
@@ -43,6 +63,8 @@ export default function SnippetsFilter() {
           ))}
         </SelectContent>
       </Select>
+
+      <Button onClick={handleSearch}>Search</Button>
     </div>
   );
 }

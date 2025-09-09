@@ -24,14 +24,14 @@ export default function SnippetList() {
   }, [page, search, tags, language, setLoading]);
 
   return (
-    <div>
+    <div className="flex gap-5 flex-col">
       <SnippetsFilter />
       {loading ? (
         <p>Loading...</p>
       ) : !snippets || snippets.length === 0 ? (
         <p>No snippets available.</p>
       ) : (
-        <div>
+        <div className="flex flex-col gap-5">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {snippets.map((snippet, index) => (
               <SnippetCard key={index} snippet={snippet} />

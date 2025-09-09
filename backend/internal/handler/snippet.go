@@ -79,8 +79,6 @@ func (apiCfg *ApiConfig) GetAllSnippetsHandler(w http.ResponseWriter, r *http.Re
 		Offset:  int32(offset),
 	})
 
-
-
 	if err != nil {
 		respondWithError(w, 400, fmt.Sprintf("Couldn't get snippets: %v", err))
 		return
