@@ -82,9 +82,19 @@ func (q *Queries) DeleteSnippet(ctx context.Context, arg DeleteSnippetParams) er
 const filterSnippets = `-- name: FilterSnippets :many
 SELECT id, title, code, language, tags, created_at, updated_at, user_id FROM snippets
 WHERE user_id = $1
-  AND ($2 = '' OR title ILIKE '%' || $2 || '%' OR code ILIKE '%' || $2 || '%')
-  AND (cardinality($3::text[]) = 0 OR tags && $3::text[])
-  AND ($4 = '' OR language = $4)
+  AND (
+    COALESCE($2, '') = ''
+    OR LOWER(title) ILIKE '%' || LOWER($2) || '%'
+    OR LOWER(code) ILIKE '%' || LOWER($2) || '%'
+  )
+  AND (
+    cardinality(COALESCE($3::text[], '{}')) = 0
+    OR tags && $3::text[]
+  )
+  AND (
+    COALESCE($4, '') = ''
+    OR LOWER(language) = LOWER($4)
+  )
 ORDER BY created_at DESC
 LIMIT $5
 OFFSET $6
