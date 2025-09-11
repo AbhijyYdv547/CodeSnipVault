@@ -22,7 +22,8 @@ Users can log in, create and organize their snippets by language and type, and o
 
 * Next.js
 * Tailwind CSS
-* Syntax highlighting (Prism.js or Shiki)
+* ShadCN
+* CodeMirror
 
 **Backend**
 
@@ -109,8 +110,8 @@ docker-compose up --build
 * [X] Frontend authentication pages
 * [X] Hook auth pages to endpoints
 * [X] Snippet dashboard 
-* [ ] Snippet Editor
-* [ ] Hook Dashboard and editor to endpoints
+* [X] Snippet Editor
+* [X] Hook Dashboard and editor to endpoints
 * [ ] Public snippet sharing
 * [ ] Deployment with CI/CD
 
