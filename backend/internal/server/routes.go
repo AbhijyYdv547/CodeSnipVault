@@ -17,7 +17,7 @@ func routerHandler(r *chi.Mux, apiCfg *handler.ApiConfig) {
 			r.Post("/create", apiCfg.MiddlewareAuth(apiCfg.CreateSnippetHandler))
 			r.Get("/", apiCfg.MiddlewareAuth(apiCfg.GetAllSnippetsHandler))
 			r.Get("/{id}", apiCfg.MiddlewareAuth(apiCfg.GetSnippetHandler))
-			r.Patch("/{id}", apiCfg.MiddlewareAuth(apiCfg.UpdateSnippetHandler))
+			r.Put("/{id}", apiCfg.MiddlewareAuth(apiCfg.UpdateSnippetHandler))
 			r.Delete("/{id}", apiCfg.MiddlewareAuth(apiCfg.DeleteSnippetHandler))
 		})
 	})
