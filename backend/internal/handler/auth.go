@@ -85,4 +85,3 @@ func verifyToken(tokenString string) (string, error) {
 
 	return username, nil
 }
-

@@ -114,7 +114,7 @@ func (apiCfg *ApiConfig) LogoutHandler(w http.ResponseWriter, r *http.Request, u
 	}
 	token := tokenString.Value
 
-	_,err = verifyToken(token)
+	_, err = verifyToken(token)
 	if err != nil {
 		respondWithError(w, http.StatusUnauthorized, "Wrong Auth Token")
 		return

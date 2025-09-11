@@ -237,6 +237,7 @@ const UpdateSnippet = ({ snippet }: SnippetCardProps) => {
                   <FormLabel>Code</FormLabel>
                   <FormControl>
                     <CodeMirror
+                      className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto overflow-x-auto"
                       value={field.value}
                       theme={dracula}
                       placeholder="Write your code here..."
