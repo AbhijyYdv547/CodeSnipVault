@@ -105,3 +105,29 @@ func (apiCfg *ApiConfig) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	})
 	respondWithJSON(w, 200, "Login Successful")
 }
+
+func (apiCfg *ApiConfig) LogoutHandler(w http.ResponseWriter, r *http.Request, user database.User) {
+	tokenString, err := r.Cookie("token")
+	if err != nil {
+		respondWithError(w, http.StatusUnauthorized, "Missing Auth Token")
+		return
+	}
+	token := tokenString.Value
+
+	_,err = verifyToken(token)
+	if err != nil {
+		respondWithError(w, http.StatusUnauthorized, "Wrong Auth Token")
+		return
+	}
+
+	cookie := &http.Cookie{
+		Name:     "token",
+		Value:    "",
+		MaxAge:   -1,
+		Path:     "/",
+		HttpOnly: true,
+	}
+	http.SetCookie(w, cookie)
+
+	respondWithJSON(w, 200, "Logout successful")
+}

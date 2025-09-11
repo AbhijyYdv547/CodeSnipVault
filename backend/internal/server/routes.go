@@ -11,6 +11,7 @@ func routerHandler(r *chi.Mux, apiCfg *handler.ApiConfig) {
 		r.Route("/auth", func(r chi.Router) {
 			r.Post("/signup", apiCfg.SignupHandler)
 			r.Post("/login", apiCfg.LoginHandler)
+			r.Post("/logout", apiCfg.MiddlewareAuth(apiCfg.LogoutHandler))
 		})
 
 		r.Route("/snippets", func(r chi.Router) {
