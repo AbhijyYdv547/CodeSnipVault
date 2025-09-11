@@ -59,14 +59,14 @@ const formSchema = z.object({
 });
 
 interface Snippet {
-  Id: string;
+  ID: string;
   Title: string;
   Code: string;
   Language: string;
   Tags: string[];
-  created_at: string;
-  updated_at: string;
-  user_id: string;
+  CreatedAt: string;
+  UpdatedAt: string;
+  UserID: string;
 }
 
 interface SnippetCardProps {
@@ -87,7 +87,9 @@ const UpdateSnippet = ({ snippet }: SnippetCardProps) => {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const res = await axios.put(`/v1/snippets/${snippet.Id}`, {
+      console.log("form submitted:", values);
+      console.log("id:", snippet.ID);
+      const res = await axios.put(`/v1/snippets/${snippet.ID}`, {
         Title: values.Title,
         Language: values.Language,
         Tags: values.Tags,
@@ -112,20 +114,20 @@ const UpdateSnippet = ({ snippet }: SnippetCardProps) => {
   return (
     <div>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <DialogTrigger asChild>
-            <Button variant="outline">
-              <BookOpen className="size-4" />
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto overflow-x-hidden">
-            <DialogHeader>
-              <DialogTitle>{snippet.Title}</DialogTitle>
-              <DialogDescription>
-                Make changes to your snippet here or . Click save when
-                you&apos;re done.
-              </DialogDescription>
-            </DialogHeader>
+        <DialogTrigger asChild>
+          <Button variant="outline">
+            <BookOpen className="size-4" />
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto overflow-x-hidden rounded-2xl">
+          <DialogHeader>
+            <DialogTitle>{snippet.Title}</DialogTitle>
+            <DialogDescription>
+              Make changes to your snippet here or . Click save when you&apos;re
+              done.
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
             <FormField
               control={form.control}
               name="Title"
@@ -268,14 +270,18 @@ const UpdateSnippet = ({ snippet }: SnippetCardProps) => {
                 </FormItem>
               )}
             />
-            <DialogFooter>
+            <DialogFooter className="mt-3">
               <DialogClose asChild>
                 <Button variant="outline">Cancel</Button>
               </DialogClose>
-              <Button type="submit">Save changes</Button>
+              <Button type="submit" disabled={form.formState.isSubmitting}>
+                {form.formState.isSubmitting
+                  ? "Saving Changes.."
+                  : "Save Changes"}
+              </Button>
             </DialogFooter>
-          </DialogContent>
-        </form>
+          </form>
+        </DialogContent>
       </Form>
     </div>
   );

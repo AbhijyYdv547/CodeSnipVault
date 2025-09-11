@@ -21,7 +21,7 @@ export async function fetchSnippets({
   if (language) query.append("language", language);
 
   const res = await axios.get(`/v1/snippets/?${query.toString()}`);
-
+  console.log(res);
   if (!res) {
     throw new Error("Failed to fetch snippets");
   }

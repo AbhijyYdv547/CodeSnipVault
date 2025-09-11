@@ -1,14 +1,29 @@
+import { Badge } from "@/components/ui/badge";
 
-import { Badge } from "@/components/ui/badge"
+interface Snippet {
+  ID: string;
+  Title: string;
+  Code: string;
+  Language: string;
+  Tags: string[];
+  CreatedAt: string;
+  UpdatedAt: string;
+  UserID: string;
+}
 
-export function BadgeDemo() {
-    return (
-        <div className="flex flex-col items-center gap-2">
-            <div className="flex w-full flex-wrap gap-2">
-                <Badge>Badge</Badge>
-                <Badge variant="secondary">Secondary</Badge>
-                <Badge variant="outline">Outline</Badge>
-            </div>
+interface SnippetCardProps {
+  snippet: Snippet;
+}
+
+export function SnippetBadge({ snippet }: SnippetCardProps) {
+  const arr = snippet.Tags;
+  return (
+    <div className="flex items-center justify-center gap-2 flex-wrap">
+      {arr.map((tag, index) => (
+        <div key={index} className="flex flex-wrap">
+          <Badge>{tag}</Badge>
         </div>
-    )
+      ))}
+    </div>
+  );
 }
