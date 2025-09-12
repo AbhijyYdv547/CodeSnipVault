@@ -22,8 +22,8 @@ func routerHandler(r *chi.Mux, apiCfg *handler.ApiConfig) {
 			r.Delete("/{id}", apiCfg.MiddlewareAuth(apiCfg.DeleteSnippetHandler))
 		})
 
-		r.Route("/user", func(r chi.Router){
-			r.Get("/" , apiCfg.MiddlewareAuth(apiCfg.GetUserDetailsHandler))
+		r.Route("/user", func(r chi.Router) {
+			r.Get("/", apiCfg.MiddlewareAuth(apiCfg.GetUserDetailsHandler))
 		})
 	})
 }

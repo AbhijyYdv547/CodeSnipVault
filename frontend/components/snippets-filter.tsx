@@ -32,11 +32,22 @@ export default function SnippetsFilter() {
     setLanguage(localLanguage);
   };
 
+  const handleClear = () => {
+    setLocalSearch("");
+    setLocalTags("");
+    setLocalLanguage("");
+
+    setPage(1);
+    setSearch("");
+    setTags([]);
+    setLanguage("");
+  };
+
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-2 md:flex-row flex-col">
       <Input
         placeholder="Search snippets"
-        className="w-full"
+        className="w-full md:w-auto"
         value={localSearch}
         onChange={(e) => setLocalSearch(e.target.value)}
       />
@@ -65,6 +76,9 @@ export default function SnippetsFilter() {
       </Select>
 
       <Button onClick={handleSearch}>Search</Button>
+      <Button variant="secondary" onClick={handleClear}>
+        Clear Choices
+      </Button>
     </div>
   );
 }
