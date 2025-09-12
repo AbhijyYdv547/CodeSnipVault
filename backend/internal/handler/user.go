@@ -131,3 +131,13 @@ func (apiCfg *ApiConfig) LogoutHandler(w http.ResponseWriter, r *http.Request, u
 
 	respondWithJSON(w, 200, "Logout successful")
 }
+
+func (apiCfg *ApiConfig) GetUserDetailsHandler(w http.ResponseWriter, r *http.Request, user database.User){
+	userData, err := apiCfg.DB.GetUserById(r.Context(), user.ID);
+	
+	if err != nil {
+		respondWithError(w, 400, "Couldn't find user")
+		return
+	}
+	respondWithJSON(w, 200, userData)
+}
