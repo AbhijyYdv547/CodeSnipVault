@@ -22,6 +22,8 @@ interface Snippet {
   Code: string;
   Language: string;
   Tags: string[];
+  Public: boolean;
+  ShareId: string;
   CreatedAt: string;
   UpdatedAt: string;
   UserID: string;

@@ -54,8 +54,8 @@ func (apiCfg *ApiConfig) MiddlewareAuth(handler authedHandler) http.HandlerFunc 
 func createToken(userId uuid.UUID) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256,
 		jwt.MapClaims{
-			"userId":  userId,
-			"exp": time.Now().Add(30 * time.Minute).Unix(),
+			"userId": userId,
+			"exp":    time.Now().Add(30 * time.Minute).Unix(),
 		})
 
 	tokenString, err := token.SignedString(secretKey)

@@ -55,7 +55,7 @@ const formSchema = z.object({
     error: "Please select at least one item",
   }),
   Code: z.string(),
-  Share: z.boolean(),
+  Public: z.boolean(),
 });
 
 interface Snippet {
@@ -64,6 +64,8 @@ interface Snippet {
   Code: string;
   Language: string;
   Tags: string[];
+  Public: boolean;
+  ShareId: string;
   CreatedAt: string;
   UpdatedAt: string;
   UserID: string;
@@ -81,7 +83,7 @@ const UpdateSnippet = ({ snippet }: SnippetCardProps) => {
       Language: snippet.Language,
       Tags: snippet.Tags,
       Code: snippet.Code,
-      Share: true,
+      Public: snippet.Public,
     },
   });
 
@@ -94,7 +96,7 @@ const UpdateSnippet = ({ snippet }: SnippetCardProps) => {
         Language: values.Language,
         Tags: values.Tags,
         Code: values.Code,
-        Share: values.Share,
+        Public: values.Public,
       });
       if (!res) {
         toast.error("Failed to update form. Please try again.");
@@ -253,7 +255,7 @@ const UpdateSnippet = ({ snippet }: SnippetCardProps) => {
 
             <FormField
               control={form.control}
-              name="Share"
+              name="Public"
               render={({ field }) => (
                 <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                   <div className="space-y-0.5">

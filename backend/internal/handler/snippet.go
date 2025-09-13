@@ -16,11 +16,11 @@ import (
 )
 
 type parameters struct {
-	Title    string       `json:"title"`
-	Code     string       `json:"code"`
-	Language string       `json:"language"`
-	Tags     []string     `json:"tags"`
-	Public   sql.NullBool `json:"public"`
+	Title    string   `json:"title"`
+	Code     string   `json:"code"`
+	Language string   `json:"language"`
+	Tags     []string `json:"tags"`
+	Public   bool     `json:"public"`
 }
 
 func (apiCfg *ApiConfig) CreateSnippetHandler(w http.ResponseWriter, r *http.Request, user database.User) {
@@ -39,7 +39,7 @@ func (apiCfg *ApiConfig) CreateSnippetHandler(w http.ResponseWriter, r *http.Req
 		Code:      params.Code,
 		Language:  params.Language,
 		Tags:      params.Tags,
-		Public:    params.Public,
+		Public:    sql.NullBool{Bool: params.Public, Valid: true},
 		CreatedAt: time.Now().UTC(),
 		UpdatedAt: time.Now().UTC(),
 		UserID:    user.ID,
@@ -138,7 +138,7 @@ func (apiCfg *ApiConfig) UpdateSnippetHandler(w http.ResponseWriter, r *http.Req
 		Code:     params.Code,
 		Language: params.Language,
 		Tags:     params.Tags,
-		Public:   params.Public,
+		Public:   sql.NullBool{Bool: params.Public, Valid: true},
 		UserID:   user.ID,
 		ID:       id,
 	})

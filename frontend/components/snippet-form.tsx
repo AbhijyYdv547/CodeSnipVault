@@ -45,7 +45,7 @@ const formSchema = z.object({
     error: "Please select at least one item",
   }),
   Code: z.string(),
-  Share: z.boolean(),
+  Public: z.boolean(),
 });
 
 export default function SnippetForm() {
@@ -56,18 +56,18 @@ export default function SnippetForm() {
       Language: "",
       Tags: ["test"],
       Code: "",
-      Share: false,
+      Public: false,
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       const res = await axios.post("/v1/snippets/create", {
-        Title: values.Title,
-        Language: values.Language,
-        Tags: values.Tags,
-        Code: values.Code,
-        Share: values.Share,
+        title: values.Title,
+        language: values.Language,
+        tags: values.Tags,
+        code: values.Code,
+        public: values.Public,
       });
       if (!res) {
         toast.error("Failed to create form. Please try again.");
@@ -214,7 +214,7 @@ export default function SnippetForm() {
 
         <FormField
           control={form.control}
-          name="Share"
+          name="Public"
           render={({ field }) => (
             <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
               <div className="space-y-0.5">
