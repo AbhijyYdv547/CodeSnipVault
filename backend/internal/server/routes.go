@@ -20,10 +20,12 @@ func routerHandler(r *chi.Mux, apiCfg *handler.ApiConfig) {
 			r.Get("/{id}", apiCfg.MiddlewareAuth(apiCfg.GetSnippetHandler))
 			r.Put("/{id}", apiCfg.MiddlewareAuth(apiCfg.UpdateSnippetHandler))
 			r.Delete("/{id}", apiCfg.MiddlewareAuth(apiCfg.DeleteSnippetHandler))
+			r.Get("/share/{share_id}", apiCfg.GetPublicSnippetHandler)
 		})
 
 		r.Route("/user", func(r chi.Router) {
 			r.Get("/", apiCfg.MiddlewareAuth(apiCfg.GetUserDetailsHandler))
 		})
+
 	})
 }

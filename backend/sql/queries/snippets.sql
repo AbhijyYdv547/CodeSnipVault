@@ -1,10 +1,10 @@
 -- name: CreateSnippet :one
 INSERT INTO snippets (
-    id, 
     title, 
     code, 
     language, 
     tags, 
+    public,
     created_at, 
     updated_at, 
     user_id)
@@ -31,9 +31,10 @@ SET title = $1,
 code = $2,
 language = $3,
 tags = $4,
+public = $5,
 updated_at = NOW()
-WHERE user_id = $5
-AND id = $6 
+WHERE user_id = $6
+AND id = $7 
 RETURNING *;
 
 
@@ -62,6 +63,10 @@ ORDER BY created_at DESC
 LIMIT $5
 OFFSET $6;
 
+-- name: GetPublicSnippet :one
+SELECT title, code, language, tags FROM snippets 
+WHERE share_id = $1 
+AND public = TRUE;
 
 
 

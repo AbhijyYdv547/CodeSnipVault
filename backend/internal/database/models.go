@@ -5,6 +5,7 @@
 package database
 
 import (
+	"database/sql"
 	"time"
 
 	"github.com/google/uuid"
@@ -19,6 +20,8 @@ type Snippet struct {
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	UserID    uuid.UUID
+	Public    sql.NullBool
+	ShareID   uuid.UUID
 }
 
 type User struct {

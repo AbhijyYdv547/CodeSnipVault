@@ -2,6 +2,7 @@ package handler
 
 import (
 	"backend/internal/database"
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -15,10 +16,11 @@ import (
 )
 
 type parameters struct {
-	Title    string   `json:"title"`
-	Code     string   `json:"code"`
-	Language string   `json:"language"`
-	Tags     []string `json:"tags"`
+	Title    string       `json:"title"`
+	Code     string       `json:"code"`
+	Language string       `json:"language"`
+	Tags     []string     `json:"tags"`
+	Public   sql.NullBool `json:"public"`
 }
 
 func (apiCfg *ApiConfig) CreateSnippetHandler(w http.ResponseWriter, r *http.Request, user database.User) {
@@ -33,11 +35,11 @@ func (apiCfg *ApiConfig) CreateSnippetHandler(w http.ResponseWriter, r *http.Req
 	}
 
 	snippet, err := apiCfg.DB.CreateSnippet(r.Context(), database.CreateSnippetParams{
-		ID:        uuid.New(),
 		Title:     params.Title,
 		Code:      params.Code,
 		Language:  params.Language,
 		Tags:      params.Tags,
+		Public:    params.Public,
 		CreatedAt: time.Now().UTC(),
 		UpdatedAt: time.Now().UTC(),
 		UserID:    user.ID,
@@ -136,6 +138,7 @@ func (apiCfg *ApiConfig) UpdateSnippetHandler(w http.ResponseWriter, r *http.Req
 		Code:     params.Code,
 		Language: params.Language,
 		Tags:     params.Tags,
+		Public:   params.Public,
 		UserID:   user.ID,
 		ID:       id,
 	})
@@ -166,4 +169,21 @@ func (apiCfg *ApiConfig) DeleteSnippetHandler(w http.ResponseWriter, r *http.Req
 	}
 
 	respondWithJSON(w, 200, "Snippet Deleted")
+}
+
+func (apiCfg *ApiConfig) GetPublicSnippetHandler(w http.ResponseWriter, r *http.Request) {
+	shareStr := chi.URLParam(r, "share_id")
+	shareId, err := uuid.Parse(shareStr)
+	if err != nil {
+		respondWithError(w, 400, fmt.Sprintf("No shareID for snippet present: %v", err))
+		return
+	}
+
+	snippet, err := apiCfg.DB.GetPublicSnippet(r.Context(), shareId)
+	if err != nil {
+		respondWithError(w, 400, fmt.Sprintf("Error getting snippet: %v", err))
+		return
+	}
+
+	respondWithJSON(w, 200, snippet)
 }

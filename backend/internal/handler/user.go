@@ -7,7 +7,6 @@ import (
 	"os"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/joho/godotenv"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -41,7 +40,6 @@ func (apiCfg *ApiConfig) SignupHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	user, err := apiCfg.DB.CreateUser(r.Context(), database.CreateUserParams{
-		ID:        uuid.New(),
 		Username:  params.Username,
 		Email:     params.Email,
 		Password:  string(hashedPassword),

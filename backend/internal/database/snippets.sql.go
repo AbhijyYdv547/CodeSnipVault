@@ -7,6 +7,7 @@ package database
 
 import (
 	"context"
+	"database/sql"
 	"time"
 
 	"github.com/google/uuid"
@@ -15,24 +16,24 @@ import (
 
 const createSnippet = `-- name: CreateSnippet :one
 INSERT INTO snippets (
-    id, 
     title, 
     code, 
     language, 
     tags, 
+    public,
     created_at, 
     updated_at, 
     user_id)
 VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-RETURNING id, title, code, language, tags, created_at, updated_at, user_id
+RETURNING id, title, code, language, tags, created_at, updated_at, user_id, public, share_id
 `
 
 type CreateSnippetParams struct {
-	ID        uuid.UUID
 	Title     string
 	Code      string
 	Language  string
 	Tags      []string
+	Public    sql.NullBool
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	UserID    uuid.UUID
@@ -40,11 +41,11 @@ type CreateSnippetParams struct {
 
 func (q *Queries) CreateSnippet(ctx context.Context, arg CreateSnippetParams) (Snippet, error) {
 	row := q.db.QueryRowContext(ctx, createSnippet,
-		arg.ID,
 		arg.Title,
 		arg.Code,
 		arg.Language,
 		pq.Array(arg.Tags),
+		arg.Public,
 		arg.CreatedAt,
 		arg.UpdatedAt,
 		arg.UserID,
@@ -59,6 +60,8 @@ func (q *Queries) CreateSnippet(ctx context.Context, arg CreateSnippetParams) (S
 		&i.CreatedAt,
 		&i.UpdatedAt,
 		&i.UserID,
+		&i.Public,
+		&i.ShareID,
 	)
 	return i, err
 }
@@ -80,7 +83,7 @@ func (q *Queries) DeleteSnippet(ctx context.Context, arg DeleteSnippetParams) er
 }
 
 const filterSnippets = `-- name: FilterSnippets :many
-SELECT id, title, code, language, tags, created_at, updated_at, user_id FROM snippets
+SELECT id, title, code, language, tags, created_at, updated_at, user_id, public, share_id FROM snippets
 WHERE user_id = $1
   AND (
     COALESCE($2, '') = ''
@@ -134,6 +137,8 @@ func (q *Queries) FilterSnippets(ctx context.Context, arg FilterSnippetsParams) 
 			&i.CreatedAt,
 			&i.UpdatedAt,
 			&i.UserID,
+			&i.Public,
+			&i.ShareID,
 		); err != nil {
 			return nil, err
 		}
@@ -148,8 +153,33 @@ func (q *Queries) FilterSnippets(ctx context.Context, arg FilterSnippetsParams) 
 	return items, nil
 }
 
+const getPublicSnippet = `-- name: GetPublicSnippet :one
+SELECT title, code, language, tags FROM snippets 
+WHERE share_id = $1 
+AND public = TRUE
+`
+
+type GetPublicSnippetRow struct {
+	Title    string
+	Code     string
+	Language string
+	Tags     []string
+}
+
+func (q *Queries) GetPublicSnippet(ctx context.Context, shareID uuid.UUID) (GetPublicSnippetRow, error) {
+	row := q.db.QueryRowContext(ctx, getPublicSnippet, shareID)
+	var i GetPublicSnippetRow
+	err := row.Scan(
+		&i.Title,
+		&i.Code,
+		&i.Language,
+		pq.Array(&i.Tags),
+	)
+	return i, err
+}
+
 const getSnippetsOfUser = `-- name: GetSnippetsOfUser :many
-SELECT id, title, code, language, tags, created_at, updated_at, user_id from snippets
+SELECT id, title, code, language, tags, created_at, updated_at, user_id, public, share_id from snippets
 WHERE user_id = $1
 ORDER BY created_at DESC
 LIMIT $2
@@ -180,6 +210,8 @@ func (q *Queries) GetSnippetsOfUser(ctx context.Context, arg GetSnippetsOfUserPa
 			&i.CreatedAt,
 			&i.UpdatedAt,
 			&i.UserID,
+			&i.Public,
+			&i.ShareID,
 		); err != nil {
 			return nil, err
 		}
@@ -195,7 +227,7 @@ func (q *Queries) GetSnippetsOfUser(ctx context.Context, arg GetSnippetsOfUserPa
 }
 
 const getSpecificSnippet = `-- name: GetSpecificSnippet :one
-SELECT id, title, code, language, tags, created_at, updated_at, user_id from snippets
+SELECT id, title, code, language, tags, created_at, updated_at, user_id, public, share_id from snippets
 WHERE user_id = $1
 AND id = $2
 `
@@ -217,6 +249,8 @@ func (q *Queries) GetSpecificSnippet(ctx context.Context, arg GetSpecificSnippet
 		&i.CreatedAt,
 		&i.UpdatedAt,
 		&i.UserID,
+		&i.Public,
+		&i.ShareID,
 	)
 	return i, err
 }
@@ -227,10 +261,11 @@ SET title = $1,
 code = $2,
 language = $3,
 tags = $4,
+public = $5,
 updated_at = NOW()
-WHERE user_id = $5
-AND id = $6 
-RETURNING id, title, code, language, tags, created_at, updated_at, user_id
+WHERE user_id = $6
+AND id = $7 
+RETURNING id, title, code, language, tags, created_at, updated_at, user_id, public, share_id
 `
 
 type UpdateSnippetParams struct {
@@ -238,6 +273,7 @@ type UpdateSnippetParams struct {
 	Code     string
 	Language string
 	Tags     []string
+	Public   sql.NullBool
 	UserID   uuid.UUID
 	ID       uuid.UUID
 }
@@ -248,6 +284,7 @@ func (q *Queries) UpdateSnippet(ctx context.Context, arg UpdateSnippetParams) (S
 		arg.Code,
 		arg.Language,
 		pq.Array(arg.Tags),
+		arg.Public,
 		arg.UserID,
 		arg.ID,
 	)
@@ -261,6 +298,8 @@ func (q *Queries) UpdateSnippet(ctx context.Context, arg UpdateSnippetParams) (S
 		&i.CreatedAt,
 		&i.UpdatedAt,
 		&i.UserID,
+		&i.Public,
+		&i.ShareID,
 	)
 	return i, err
 }
