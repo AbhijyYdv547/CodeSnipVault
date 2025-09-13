@@ -86,7 +86,7 @@ func (apiCfg *ApiConfig) LoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tokenString, err := createToken(user.Username)
+	tokenString, err := createToken(user.ID)
 	if err != nil {
 		respondWithError(w, 400, "Some error occured")
 		return

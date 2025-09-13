@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 	"github.com/joho/godotenv"
 )
 
@@ -34,13 +35,13 @@ func (apiCfg *ApiConfig) MiddlewareAuth(handler authedHandler) http.HandlerFunc 
 		}
 		token := tokenString.Value
 
-		username, err := verifyToken(token)
+		userId, err := verifyToken(token)
 		if err != nil {
 			respondWithError(w, http.StatusUnauthorized, "Invalid token")
 			return
 		}
 
-		user, err := apiCfg.DB.GetUserByUsername(r.Context(), username)
+		user, err := apiCfg.DB.GetUserById(r.Context(), userId)
 		if err != nil {
 			respondWithError(w, http.StatusUnauthorized, "User not found")
 			return
@@ -50,11 +51,11 @@ func (apiCfg *ApiConfig) MiddlewareAuth(handler authedHandler) http.HandlerFunc 
 	}
 }
 
-func createToken(username string) (string, error) {
+func createToken(userId uuid.UUID) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256,
 		jwt.MapClaims{
-			"username": username,
-			"exp":      time.Now().Add(30 * time.Minute).Unix(),
+			"userId":  userId,
+			"exp": time.Now().Add(30 * time.Minute).Unix(),
 		})
 
 	tokenString, err := token.SignedString(secretKey)
@@ -65,23 +66,28 @@ func createToken(username string) (string, error) {
 	return tokenString, nil
 }
 
-func verifyToken(tokenString string) (string, error) {
+func verifyToken(tokenString string) (uuid.UUID, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		return secretKey, nil
 	})
 
 	if err != nil || !token.Valid {
-		return "", fmt.Errorf("invalid token")
+		return uuid.Nil, fmt.Errorf("invalid token")
 	}
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
-		return "", fmt.Errorf("invalid token claims")
+		return uuid.Nil, fmt.Errorf("invalid token claims")
 	}
 
-	username, ok := claims["username"].(string)
+	userIdStr, ok := claims["userId"].(string)
 	if !ok {
-		return "", fmt.Errorf("username not found in token claims")
+		return uuid.Nil, fmt.Errorf("id not found in token claims")
 	}
 
-	return username, nil
+	userId, err := uuid.Parse(userIdStr)
+	if err != nil {
+		return uuid.Nil, fmt.Errorf("invalid UUID format in token claims: %w", err)
+	}
+
+	return userId, nil
 }
