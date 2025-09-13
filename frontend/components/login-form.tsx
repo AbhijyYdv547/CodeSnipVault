@@ -8,14 +8,17 @@ import { toast } from "sonner";
 import axios from "@/lib/axios";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { useState } from "react";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
+    setLoading(true);
     e.preventDefault();
     const form = e.currentTarget;
     const formData = new FormData(form);
@@ -43,6 +46,7 @@ export function LoginForm({
         password,
       });
       toast("User has successfully logged in");
+      setLoading(false);
       router.push("/dashboard");
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
@@ -82,7 +86,7 @@ export function LoginForm({
                 <Input id="password" name="password" type="password" required />
               </div>
               <Button type="submit" className="w-full">
-                Login
+                {loading ? <span>Logging in...</span> : <span>Login</span>}
               </Button>
               <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
                 <span className="bg-card text-muted-foreground relative z-10 px-2">

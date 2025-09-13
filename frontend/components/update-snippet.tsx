@@ -47,6 +47,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
 import { toast } from "sonner";
 import axios from "@/lib/axios";
+import { SnippetCardProps } from "@/types/snippet-type";
 
 const formSchema = z.object({
   Title: z.string().min(1),
@@ -57,23 +58,6 @@ const formSchema = z.object({
   Code: z.string(),
   Public: z.boolean(),
 });
-
-interface Snippet {
-  ID: string;
-  Title: string;
-  Code: string;
-  Language: string;
-  Tags: string[];
-  Public: boolean;
-  ShareId: string;
-  CreatedAt: string;
-  UpdatedAt: string;
-  UserID: string;
-}
-
-interface SnippetCardProps {
-  snippet: Snippet;
-}
 
 const UpdateSnippet = ({ snippet }: SnippetCardProps) => {
   const form = useForm<z.infer<typeof formSchema>>({

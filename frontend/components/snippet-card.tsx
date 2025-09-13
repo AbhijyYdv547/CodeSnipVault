@@ -15,25 +15,19 @@ import { Dialog } from "@/components/ui/dialog";
 import UpdateSnippet from "./update-snippet";
 import axios from "@/lib/axios";
 import { toast } from "sonner";
-
-interface Snippet {
-  ID: string;
-  Title: string;
-  Code: string;
-  Language: string;
-  Tags: string[];
-  Public: boolean;
-  ShareId: string;
-  CreatedAt: string;
-  UpdatedAt: string;
-  UserID: string;
-}
-
-interface SnippetCardProps {
-  snippet: Snippet;
-}
+import { SnippetCardProps } from "@/types/snippet-type";
 
 export default function SnippetCard({ snippet }: SnippetCardProps) {
+  const handleCopy = () => {
+    if (snippet.Public == true) {
+      const text = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/snippets/share/${snippet.ShareId}`;
+      navigator.clipboard.writeText(text);
+      toast.success("Share Link Copied");
+    } else {
+      toast.error("Not sharable snippet");
+    }
+  };
+
   async function handleDelete() {
     try {
       const res = await axios.delete(`/v1/snippets/${snippet.ID}`);
@@ -63,9 +57,12 @@ export default function SnippetCard({ snippet }: SnippetCardProps) {
         <Dialog>
           <UpdateSnippet snippet={snippet} />
         </Dialog>
-        <Button className="cursor-pointer">
-          <Share2Icon className="size-4" />
-        </Button>
+        {snippet.Public ? (
+          <Button className="cursor-pointer" onClick={() => handleCopy()}>
+            <Share2Icon className="size-4" />
+          </Button>
+        ) : null}
+
         <Button
           className="cursor-pointer bg-red-300"
           onClick={() => handleDelete()}

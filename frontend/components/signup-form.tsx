@@ -9,14 +9,17 @@ import { useRouter } from "next/navigation";
 import axios from "@/lib/axios";
 import Link from "next/link";
 import Image from "next/image";
+import { useState } from "react";
 
 export function SignupForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   async function handleSignup(e: React.FormEvent<HTMLFormElement>) {
+    setLoading(true);
     e.preventDefault();
     const form = e.currentTarget;
     const formData = new FormData(form);
@@ -46,9 +49,10 @@ export function SignupForm({
         password,
       });
       toast("User has been registered successfully");
+      setLoading(false);
       router.push("/login");
-    } catch (err: any) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
       toast(
         "Registration failed. Please try again. Make sure the password must be at least 8 characters long and include uppercase, lowercase, number, and special character.",
       );
@@ -94,9 +98,11 @@ export function SignupForm({
                 </div>
                 <Input id="password" name="password" type="password" required />
               </div>
+
               <Button type="submit" className="w-full">
-                Signup
+                {loading ? <span>Signing up...</span> : <span>Signup</span>}
               </Button>
+
               <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
                 <span className="bg-card text-muted-foreground relative z-10 px-2">
                   Or continue with

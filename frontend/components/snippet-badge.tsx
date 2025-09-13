@@ -1,21 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-
-interface Snippet {
-  ID: string;
-  Title: string;
-  Code: string;
-  Language: string;
-  Tags: string[];
-  Public: boolean;
-  ShareId: string;
-  CreatedAt: string;
-  UpdatedAt: string;
-  UserID: string;
-}
-
-interface SnippetCardProps {
-  snippet: Snippet;
-}
+import { SnippetCardProps } from "@/types/snippet-type";
 
 export function SnippetBadge({ snippet }: SnippetCardProps) {
   const arr = snippet.Tags;
