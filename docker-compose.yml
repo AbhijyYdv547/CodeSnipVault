@@ -1,15 +1,17 @@
 services:
   backend:
-    image: codesnipgo
-    container_name: codesnipgo
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
     ports:
       - "8080:8080"
     env_file:
       - ./backend/.env
 
   frontend:
-    image: codesnipfe
-    container_name: codesnipfe
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile
     ports:
       - "3000:3000"
     env_file:
