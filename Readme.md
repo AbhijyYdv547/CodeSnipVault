@@ -5,13 +5,13 @@ Users can log in, create and organize their snippets by language and type, and o
 
 ---
 
-## Features (Planned)
+## Features
 
 * User authentication with JWT
 * Create, edit, and delete code snippets
-* Organize snippets by language and type
+* Filter snippets by language, tags or search string
 * Share snippets via unique URLs (public/private toggle)
-* Syntax highlighting for code snippets
+* Code editor using CodeMirror
 * Dashboard with search and filter options
 
 ---
@@ -58,11 +58,11 @@ codesnipvault/
 * PostgreSQL
 * Docker (optional, for containerized setup)
 
-### Clone the Repository
+### Fork the Repository then Clone your fork locally
 
 ```bash
-git clone https://github.com/yourusername/codesnipvault.git
-cd codesnipvault
+git clone https://github.com/username/CodeSnipVault.git
+cd CodeSnipVault
 ```
 
 ### Backend Setup
@@ -76,7 +76,7 @@ cd backend
 go mod tidy
 
 cd sql/schema
-goose POSTGRES_CONNECTION_STRING up
+goose postgres POSTGRES_CONNECTION_STRING up
 cd ../..
 
 sqlc generate
@@ -112,6 +112,6 @@ docker-compose up --build
 * [X] Snippet dashboard 
 * [X] Snippet Editor
 * [X] Hook Dashboard and editor to endpoints
-* [ ] Public snippet sharing
+* [X] Public snippet sharing
 * [ ] Deployment with CI/CD
 
