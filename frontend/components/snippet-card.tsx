@@ -19,7 +19,7 @@ import { SnippetCardProps } from "@/types/snippet-type";
 
 export default function SnippetCard({ snippet }: SnippetCardProps) {
   const handleCopy = () => {
-    const text = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/share/?shareId=${snippet.share_id}`;
+    const text = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/share/?share_id=${snippet.share_id}`;
     navigator.clipboard.writeText(text);
     toast.success("Share Link Copied");
   };
