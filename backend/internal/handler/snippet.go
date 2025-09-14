@@ -176,14 +176,12 @@ func (apiCfg *ApiConfig) GetPublicSnippetHandler(w http.ResponseWriter, r *http.
 	shareId, err := uuid.Parse(shareStr)
 	if err != nil {
 		respondWithError(w, 400, fmt.Sprintf("No shareID for snippet present: %v", err))
-		log.Fatal(err);
 		return
 	}
 
 	snippet, err := apiCfg.DB.GetPublicSnippet(r.Context(), shareId)
 	if err != nil {
 		respondWithError(w, 400, fmt.Sprintf("Error getting snippet: %v", err))
-		log.Fatal(err)
 		return
 	}
 
