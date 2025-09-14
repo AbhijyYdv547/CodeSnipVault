@@ -14,7 +14,8 @@ import { Button } from "./ui/button";
 import { useState } from "react";
 
 export default function SnippetsFilter() {
-  const { setSearch, setTags, setLanguage, setPage } = useSnippetStore();
+  const { setSearch, setTags, setLanguage, setPage, fetchSnippets } =
+    useSnippetStore();
 
   const [localSearch, setLocalSearch] = useState("");
   const [localTags, setLocalTags] = useState("");
@@ -30,6 +31,7 @@ export default function SnippetsFilter() {
         .filter((tag) => tag.length > 0),
     );
     setLanguage(localLanguage);
+    fetchSnippets();
   };
 
   const handleClear = () => {
@@ -41,6 +43,7 @@ export default function SnippetsFilter() {
     setSearch("");
     setTags([]);
     setLanguage("");
+    fetchSnippets();
   };
 
   return (

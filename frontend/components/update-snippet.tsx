@@ -48,6 +48,7 @@ import z from "zod";
 import { toast } from "sonner";
 import axios from "@/lib/axios";
 import { SnippetCardProps } from "@/types/snippet-type";
+import { useSnippetStore } from "@/store/SnippetStore";
 
 const formSchema = z.object({
   Title: z.string().min(1),
@@ -60,6 +61,7 @@ const formSchema = z.object({
 });
 
 const UpdateSnippet = ({ snippet }: SnippetCardProps) => {
+  const { fetchSnippets } = useSnippetStore();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -73,20 +75,15 @@ const UpdateSnippet = ({ snippet }: SnippetCardProps) => {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      console.log("form submitted:", values);
-      console.log("id:", snippet.id);
-      const res = await axios.put(`/v1/snippets/${snippet.id}`, {
+      await axios.put(`/v1/snippets/${snippet.id}`, {
         Title: values.Title,
         Language: values.Language,
         Tags: values.Tags,
         Code: values.Code,
         Public: values.Public,
       });
-      if (!res) {
-        toast.error("Failed to update form. Please try again.");
-        return;
-      }
       toast.success("Snippet updated successfully");
+      fetchSnippets();
     } catch (error) {
       console.error("Form submission error", error);
       toast.error("Failed to update the snippet. Please try again.");

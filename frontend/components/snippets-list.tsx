@@ -1,27 +1,16 @@
 "use client";
-import { fetchSnippets } from "@/lib/api";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import SnippetCard from "./snippet-card";
 import { useSnippetStore } from "@/store/SnippetStore";
 import SnippetsFilter from "./snippets-filter";
 import SnippetsPagination from "./snippets-pagination";
 
 export default function SnippetList() {
-  const [snippets, setSnippets] = useState([]);
-
-  const { search, tags, language, page, loading, setLoading } =
-    useSnippetStore();
+  const { loading, snippets, fetchSnippets } = useSnippetStore();
 
   useEffect(() => {
-    setLoading(true);
-    fetchSnippets({ page, search, tags, language })
-      .then((res) => {
-        console.log(res.data.data);
-        setSnippets(res.data.data);
-      })
-      .catch((err) => console.log(err))
-      .finally(() => setLoading(false));
-  }, [page, search, tags, language, setLoading]);
+    fetchSnippets();
+  }, [fetchSnippets]);
 
   return (
     <div className="flex gap-5 flex-col">

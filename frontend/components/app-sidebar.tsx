@@ -27,11 +27,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   async function LogoutHandler() {
     try {
-      const res = await axios.post("/v1/auth/logout");
-      if (!res) {
-        toast.error("Couldn't log user out. Please try again.");
-        return;
-      }
+      await axios.post("/v1/auth/logout");
       toast.success("User has been logged out!");
       router.push("/");
     } catch (error) {

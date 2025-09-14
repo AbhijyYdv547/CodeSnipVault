@@ -62,17 +62,13 @@ export default function SnippetForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const res = await axios.post("/v1/snippets/create", {
+      await axios.post("/v1/snippets/create", {
         title: values.Title,
         language: values.Language,
         tags: values.Tags,
         code: values.Code,
         public: values.Public,
       });
-      if (!res) {
-        toast.error("Failed to create form. Please try again.");
-        return;
-      }
       toast.success("Snippet created successfully");
     } catch (error) {
       console.error("Form submission error", error);

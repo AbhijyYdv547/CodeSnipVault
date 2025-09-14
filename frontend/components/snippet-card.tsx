@@ -16,8 +16,10 @@ import UpdateSnippet from "./update-snippet";
 import axios from "@/lib/axios";
 import { toast } from "sonner";
 import { SnippetCardProps } from "@/types/snippet-type";
+import { useSnippetStore } from "@/store/SnippetStore";
 
 export default function SnippetCard({ snippet }: SnippetCardProps) {
+  const { removeSnippets } = useSnippetStore();
   const handleCopy = () => {
     const text = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/share/?share_id=${snippet.share_id}`;
     navigator.clipboard.writeText(text);
@@ -26,12 +28,9 @@ export default function SnippetCard({ snippet }: SnippetCardProps) {
 
   async function handleDelete() {
     try {
-      const res = await axios.delete(`/v1/snippets/${snippet.id}`);
-      if (!res) {
-        toast.error("Couldn't delete snippet. Please try again.");
-        return;
-      }
+      await axios.delete(`/v1/snippets/${snippet.id}`);
       toast.success("Snippet deleted successfully!");
+      removeSnippets(snippet.id);
     } catch (error) {
       console.error(error);
       toast.error("Couldn't delete snippet. Please try again.");
