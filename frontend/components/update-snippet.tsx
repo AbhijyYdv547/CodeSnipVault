@@ -48,7 +48,6 @@ import z from "zod";
 import { toast } from "sonner";
 import axios from "@/lib/axios";
 import { SnippetCardProps } from "@/types/snippet-type";
-import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   Title: z.string().min(1),
@@ -64,19 +63,19 @@ const UpdateSnippet = ({ snippet }: SnippetCardProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      Title: snippet.Title,
-      Language: snippet.Language,
-      Tags: snippet.Tags,
-      Code: snippet.Code,
-      Public: snippet.Public,
+      Title: snippet.title,
+      Language: snippet.language,
+      Tags: snippet.tags,
+      Code: snippet.code,
+      Public: snippet.public,
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       console.log("form submitted:", values);
-      console.log("id:", snippet.ID);
-      const res = await axios.put(`/v1/snippets/${snippet.ID}`, {
+      console.log("id:", snippet.id);
+      const res = await axios.put(`/v1/snippets/${snippet.id}`, {
         Title: values.Title,
         Language: values.Language,
         Tags: values.Tags,
@@ -87,7 +86,6 @@ const UpdateSnippet = ({ snippet }: SnippetCardProps) => {
         toast.error("Failed to update form. Please try again.");
         return;
       }
-      router.refresh();
       toast.success("Snippet updated successfully");
     } catch (error) {
       console.error("Form submission error", error);
@@ -105,7 +103,7 @@ const UpdateSnippet = ({ snippet }: SnippetCardProps) => {
         </DialogTrigger>
         <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto overflow-x-hidden rounded-2xl">
           <DialogHeader>
-            <DialogTitle>{snippet.Title}</DialogTitle>
+            <DialogTitle>{snippet.title}</DialogTitle>
             <DialogDescription>
               Make changes to your snippet here or . Click save when you&apos;re
               done.
@@ -119,7 +117,7 @@ const UpdateSnippet = ({ snippet }: SnippetCardProps) => {
                 <FormItem>
                   <FormLabel>Title</FormLabel>
                   <FormControl>
-                    <Input placeholder={snippet.Title} type="text" {...field} />
+                    <Input placeholder={snippet.title} type="text" {...field} />
                   </FormControl>
                   <FormDescription>
                     This is the name of the code snippet.

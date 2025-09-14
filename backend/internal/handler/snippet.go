@@ -49,7 +49,7 @@ func (apiCfg *ApiConfig) CreateSnippetHandler(w http.ResponseWriter, r *http.Req
 		return
 	}
 
-	respondWithJSON(w, 201, snippet)
+	respondWithJSON(w, 201, databaseSnippetToSnippet(snippet))
 }
 
 func (apiCfg *ApiConfig) GetAllSnippetsHandler(w http.ResponseWriter, r *http.Request, user database.User) {
@@ -90,7 +90,7 @@ func (apiCfg *ApiConfig) GetAllSnippetsHandler(w http.ResponseWriter, r *http.Re
 		user.ID, searchStr, tags, languageStr, 10, offset)
 
 	respondWithJSON(w, 200, map[string]interface{}{
-		"data": snippets,
+		"data": databaseSnippetsToSnippets(snippets),
 	})
 }
 
@@ -112,7 +112,7 @@ func (apiCfg *ApiConfig) GetSnippetHandler(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	respondWithJSON(w, 200, snippet)
+	respondWithJSON(w, 200, databaseSnippetToSnippet(snippet))
 }
 
 func (apiCfg *ApiConfig) UpdateSnippetHandler(w http.ResponseWriter, r *http.Request, user database.User) {
@@ -147,7 +147,7 @@ func (apiCfg *ApiConfig) UpdateSnippetHandler(w http.ResponseWriter, r *http.Req
 		return
 	}
 
-	respondWithJSON(w, 200, updatedSnippet)
+	respondWithJSON(w, 200, databaseSnippetToSnippet(updatedSnippet))
 }
 
 func (apiCfg *ApiConfig) DeleteSnippetHandler(w http.ResponseWriter, r *http.Request, user database.User) {

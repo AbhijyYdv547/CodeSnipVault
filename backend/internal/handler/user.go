@@ -52,7 +52,7 @@ func (apiCfg *ApiConfig) SignupHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	respondWithJSON(w, 201, user)
+	respondWithJSON(w, 201, databaseUserToUser(user))
 
 }
 
@@ -137,5 +137,5 @@ func (apiCfg *ApiConfig) GetUserDetailsHandler(w http.ResponseWriter, r *http.Re
 		respondWithError(w, 400, "Couldn't find user")
 		return
 	}
-	respondWithJSON(w, 200, userData)
+	respondWithJSON(w, 200, databaseUserToUser(userData))
 }

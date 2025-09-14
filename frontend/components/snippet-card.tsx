@@ -19,14 +19,14 @@ import { SnippetCardProps } from "@/types/snippet-type";
 
 export default function SnippetCard({ snippet }: SnippetCardProps) {
   const handleCopy = () => {
-    const text = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/share/?shareId=${snippet.ShareID}`;
+    const text = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/share/?share_id=${snippet.share_id}`;
     navigator.clipboard.writeText(text);
     toast.success("Share Link Copied");
   };
 
   async function handleDelete() {
     try {
-      const res = await axios.delete(`/v1/snippets/${snippet.ID}`);
+      const res = await axios.delete(`/v1/snippets/${snippet.id}`);
       if (!res) {
         toast.error("Couldn't delete snippet. Please try again.");
         return;
@@ -39,21 +39,21 @@ export default function SnippetCard({ snippet }: SnippetCardProps) {
   }
 
   return (
-    <Card key={snippet.ID} className="flex flex-col justify-between">
+    <Card key={snippet.id} className="flex flex-col justify-between">
       <CardHeader>
         <div>
-          <CardTitle>{snippet.Title}</CardTitle>
+          <CardTitle>{snippet.title}</CardTitle>
         </div>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
-        <CardDescription>{snippet.Code.slice(0, 80)}...</CardDescription>
+        <CardDescription>{snippet.code.slice(0, 80)}...</CardDescription>
         <SnippetBadge snippet={snippet} />
       </CardContent>
       <CardFooter className="flex justify-between">
         <Dialog>
           <UpdateSnippet snippet={snippet} />
         </Dialog>
-        {snippet.Public.Bool == true ? (
+        {snippet.public == true ? (
           <Button className="cursor-pointer" onClick={() => handleCopy()}>
             <Share2Icon className="size-4" />
           </Button>
