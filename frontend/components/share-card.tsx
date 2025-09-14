@@ -40,12 +40,12 @@ const ShareCard = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{snippetData?.Title}</CardTitle>
-        <CardDescription>{snippetData?.Language}</CardDescription>
-        <CardAction>{snippetData?.Tags}</CardAction>
+        <CardTitle>{snippetData?.title}</CardTitle>
+        <CardDescription>{snippetData?.language}</CardDescription>
+        <CardAction>{snippetData?.tags}</CardAction>
       </CardHeader>
       <CardContent>
-        <p>{snippetData?.Code}</p>
+        <p>{snippetData?.code}</p>
       </CardContent>
       <CardFooter>
         <p>Shared from CodeSnippetVault</p>

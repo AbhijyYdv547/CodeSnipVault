@@ -1,14 +1,14 @@
 export interface Snippet {
-  ID: string;
-  Title: string;
-  Code: string;
-  Language: string;
-  Tags: string[];
-  Public: boolean;
-  ShareID: string;
-  CreatedAt: string;
-  UpdatedAt: string;
-  UserID: string;
+  id: string;
+  title: string;
+  code: string;
+  language: string;
+  tags: string[];
+  public: boolean;
+  created_at: string;
+  updated_at: string;
+  user_id: string;
+  share_id: string;
 }
 
 export interface SnippetCardProps {
