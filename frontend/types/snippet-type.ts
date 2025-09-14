@@ -5,7 +5,7 @@ export interface Snippet {
   Language: string;
   Tags: string[];
   Public: boolean;
-  ShareId: string;
+  ShareID: string;
   CreatedAt: string;
   UpdatedAt: string;
   UserID: string;

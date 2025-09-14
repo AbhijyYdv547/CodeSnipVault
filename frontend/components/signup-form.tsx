@@ -31,14 +31,14 @@ export function SignupForm({
     const isPasswordValid =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/.test(password!);
     if (!isPasswordValid) {
-      toast(
+      toast.error(
         "Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.",
       );
       return;
     }
 
     if (!username || !email || !password) {
-      toast("Please fill in all fields");
+      toast.error("Please fill in all fields");
       return;
     }
 
@@ -48,12 +48,12 @@ export function SignupForm({
         email,
         password,
       });
-      toast("User has been registered successfully");
+      toast.success("User has been registered successfully");
       setLoading(false);
       router.push("/login");
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      toast(
+      toast.error(
         "Registration failed. Please try again. Make sure the password must be at least 8 characters long and include uppercase, lowercase, number, and special character.",
       );
       console.error("Registration error", err.response?.data || err);

@@ -48,6 +48,7 @@ import z from "zod";
 import { toast } from "sonner";
 import axios from "@/lib/axios";
 import { SnippetCardProps } from "@/types/snippet-type";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   Title: z.string().min(1),
@@ -86,11 +87,8 @@ const UpdateSnippet = ({ snippet }: SnippetCardProps) => {
         toast.error("Failed to update form. Please try again.");
         return;
       }
-      toast(
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(values, null, 2)}</code>
-        </pre>,
-      );
+      router.refresh();
+      toast.success("Snippet updated successfully");
     } catch (error) {
       console.error("Form submission error", error);
       toast.error("Failed to update the snippet. Please try again.");

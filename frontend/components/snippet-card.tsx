@@ -19,13 +19,9 @@ import { SnippetCardProps } from "@/types/snippet-type";
 
 export default function SnippetCard({ snippet }: SnippetCardProps) {
   const handleCopy = () => {
-    if (snippet.Public == true) {
-      const text = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/snippets/share/${snippet.ShareId}`;
-      navigator.clipboard.writeText(text);
-      toast.success("Share Link Copied");
-    } else {
-      toast.error("Not sharable snippet");
-    }
+    const text = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/share/?shareId=${snippet.ShareID}`;
+    navigator.clipboard.writeText(text);
+    toast.success("Share Link Copied");
   };
 
   async function handleDelete() {
@@ -57,14 +53,15 @@ export default function SnippetCard({ snippet }: SnippetCardProps) {
         <Dialog>
           <UpdateSnippet snippet={snippet} />
         </Dialog>
-        {snippet.Public ? (
+        {snippet.Public.Bool == true ? (
           <Button className="cursor-pointer" onClick={() => handleCopy()}>
             <Share2Icon className="size-4" />
           </Button>
         ) : null}
 
         <Button
-          className="cursor-pointer bg-red-300"
+          variant="destructive"
+          className="cursor-pointer"
           onClick={() => handleDelete()}
         >
           <Trash2 className="size-4" />

@@ -32,7 +32,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         toast.error("Couldn't log user out. Please try again.");
         return;
       }
-      toast("User has been logged out!");
+      toast.success("User has been logged out!");
       router.push("/");
     } catch (error) {
       console.error(error);

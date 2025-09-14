@@ -73,11 +73,7 @@ export default function SnippetForm() {
         toast.error("Failed to create form. Please try again.");
         return;
       }
-      toast(
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(values, null, 2)}</code>
-        </pre>,
-      );
+      toast.success("Snippet created successfully");
     } catch (error) {
       console.error("Form submission error", error);
       toast.error("Failed to submit the form. Please try again.");

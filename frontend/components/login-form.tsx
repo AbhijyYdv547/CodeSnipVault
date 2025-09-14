@@ -29,14 +29,14 @@ export function LoginForm({
     const isPasswordValid =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/.test(password!);
     if (!isPasswordValid) {
-      toast(
+      toast.error(
         "Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.",
       );
       return;
     }
 
     if (!email || !password) {
-      toast("Please fill in all fields");
+      toast.error("Please fill in all fields");
       return;
     }
 
@@ -45,12 +45,12 @@ export function LoginForm({
         email,
         password,
       });
-      toast("User has successfully logged in");
+      toast.success("User has successfully logged in");
       setLoading(false);
       router.push("/dashboard");
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      toast(
+      toast.error(
         "Login failed. Please try again. Make sure the password must be at least 8 characters long and include uppercase, lowercase, number, and special character.",
       );
       console.error("Login error", err.response?.data || err);
