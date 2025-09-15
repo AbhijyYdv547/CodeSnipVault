@@ -2,6 +2,7 @@ package main
 
 import (
 	"backend/internal/database"
+	_ "backend/internal/docs"
 	"backend/internal/handler"
 	"backend/internal/server"
 	"context"
@@ -16,6 +17,20 @@ import (
 	"github.com/joho/godotenv"
 )
 
+// @title CodeSnipVault API
+// @version 1.0
+// @description This is the backend API for CodeSnipVault
+// @termsOfService http://example.com/terms/
+
+// @contact.name API Support
+// @contact.url http://www.example.com/support
+// @contact.email support@example.com
+
+// @license.name MIT
+// @license.url https://opensource.org/licenses/MIT
+
+// @host localhost:8080
+// @BasePath /v1
 func gracefulShutdown(apiServer *http.Server, done chan bool) {
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer stop()

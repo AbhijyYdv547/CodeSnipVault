@@ -7,6 +7,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
+	"github.com/swaggo/http-swagger"
 )
 
 func GetApi(apiCfg *handler.ApiConfig) http.Handler {
@@ -22,6 +23,9 @@ func GetApi(apiCfg *handler.ApiConfig) http.Handler {
 	r.Use(middleware.Logger)
 
 	routerHandler(r, apiCfg)
+	r.Get("/swagger/*", httpSwagger.Handler(
+		httpSwagger.URL("http://localhost:8080/swagger/doc.json"),
+	))
 
 	return r
 }

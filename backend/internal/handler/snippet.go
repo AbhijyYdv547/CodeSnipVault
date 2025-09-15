@@ -23,6 +23,16 @@ type parameters struct {
 	Public   bool     `json:"public"`
 }
 
+// CreateSnippetHandler godoc
+// @Summary      Create a new snippet
+// @Description  Create a snippet belonging to the authenticated user
+// @Tags         snippets
+// @Accept       json
+// @Produce      json
+// @Param        request body parameters true "Snippet payload"
+// @Success      201 {object} Snippet
+// @Failure      400 {object} ErrorResponse
+// @Router       /snippets [post]
 func (apiCfg *ApiConfig) CreateSnippetHandler(w http.ResponseWriter, r *http.Request, user database.User) {
 
 	decoder := json.NewDecoder(r.Body)
@@ -52,6 +62,18 @@ func (apiCfg *ApiConfig) CreateSnippetHandler(w http.ResponseWriter, r *http.Req
 	respondWithJSON(w, 201, databaseSnippetToSnippet(snippet))
 }
 
+// GetAllSnippetsHandler godoc
+// @Summary      Get all snippets
+// @Description  Get a paginated list of snippets filtered by search, tags, or language
+// @Tags         snippets
+// @Produce      json
+// @Param        page query int false "Page number"
+// @Param        search query string false "Search string"
+// @Param        tags query string false "Comma separated tags"
+// @Param        language query string false "Programming language"
+// @Success      200 {object} map[string][]Snippet
+// @Failure      400 {object} ErrorResponse
+// @Router       /snippets [get]
 func (apiCfg *ApiConfig) GetAllSnippetsHandler(w http.ResponseWriter, r *http.Request, user database.User) {
 	page, err := strconv.Atoi(r.URL.Query().Get("page"))
 	if err != nil || page < 1 {
@@ -94,6 +116,15 @@ func (apiCfg *ApiConfig) GetAllSnippetsHandler(w http.ResponseWriter, r *http.Re
 	})
 }
 
+// GetSnippetHandler godoc
+// @Summary      Get a specific snippet
+// @Description  Get a snippet by ID belonging to the authenticated user
+// @Tags         snippets
+// @Produce      json
+// @Param        id path string true "Snippet ID"
+// @Success      200 {object} Snippet
+// @Failure      400 {object} ErrorResponse
+// @Router       /snippets/{id} [get]
 func (apiCfg *ApiConfig) GetSnippetHandler(w http.ResponseWriter, r *http.Request, user database.User) {
 	idStr := chi.URLParam(r, "id")
 
@@ -115,6 +146,17 @@ func (apiCfg *ApiConfig) GetSnippetHandler(w http.ResponseWriter, r *http.Reques
 	respondWithJSON(w, 200, databaseSnippetToSnippet(snippet))
 }
 
+// UpdateSnippetHandler godoc
+// @Summary      Update a snippet
+// @Description  Update a snippet by ID belonging to the authenticated user
+// @Tags         snippets
+// @Accept       json
+// @Produce      json
+// @Param        id path string true "Snippet ID"
+// @Param        request body parameters true "Snippet payload"
+// @Success      200 {object} Snippet
+// @Failure      400 {object} ErrorResponse
+// @Router       /snippets/{id} [put]
 func (apiCfg *ApiConfig) UpdateSnippetHandler(w http.ResponseWriter, r *http.Request, user database.User) {
 	idStr := chi.URLParam(r, "id")
 
@@ -150,6 +192,15 @@ func (apiCfg *ApiConfig) UpdateSnippetHandler(w http.ResponseWriter, r *http.Req
 	respondWithJSON(w, 200, databaseSnippetToSnippet(updatedSnippet))
 }
 
+// DeleteSnippetHandler godoc
+// @Summary      Delete a snippet
+// @Description  Delete a snippet by ID belonging to the authenticated user
+// @Tags         snippets
+// @Produce      json
+// @Param        id path string true "Snippet ID"
+// @Success      200 {string} string "Snippet Deleted"
+// @Failure      400 {object} ErrorResponse
+// @Router       /snippets/{id} [delete]
 func (apiCfg *ApiConfig) DeleteSnippetHandler(w http.ResponseWriter, r *http.Request, user database.User) {
 	idStr := chi.URLParam(r, "id")
 
@@ -171,6 +222,15 @@ func (apiCfg *ApiConfig) DeleteSnippetHandler(w http.ResponseWriter, r *http.Req
 	respondWithJSON(w, 200, "Snippet Deleted")
 }
 
+// GetPublicSnippetHandler godoc
+// @Summary      Get a public snippet
+// @Description  Get a snippet by public share ID
+// @Tags         snippets
+// @Produce      json
+// @Param        share_id path string true "Share ID"
+// @Success      200 {object} Snippet
+// @Failure      400 {object} ErrorResponse
+// @Router       /snippets/public/{share_id} [get]
 func (apiCfg *ApiConfig) GetPublicSnippetHandler(w http.ResponseWriter, r *http.Request) {
 	shareStr := chi.URLParam(r, "share_id")
 	shareId, err := uuid.Parse(shareStr)

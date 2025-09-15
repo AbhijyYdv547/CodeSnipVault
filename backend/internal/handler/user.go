@@ -12,6 +12,17 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+// SignupHandler godoc
+// @Summary      Register a new user
+// @Description  Creates a new user account
+// @Tags         auth
+// @Accept       json
+// @Produce      json
+// @Param        request body SignupRequest true "Signup request body"
+// @Success      201 {object} UserResponse
+// @Failure      400 {object} ErrorResponse
+// @Failure      409 {object} ErrorResponse
+// @Router       /v1/auth/signup [post]
 func (apiCfg *ApiConfig) SignupHandler(w http.ResponseWriter, r *http.Request) {
 
 	type parameters struct {
@@ -58,6 +69,16 @@ func (apiCfg *ApiConfig) SignupHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
+// LoginHandler godoc
+// @Summary      User login
+// @Description  Authenticate a user and set an auth cookie
+// @Tags         auth
+// @Accept       json
+// @Produce      json
+// @Param        request body LoginRequest true "Login credentials"
+// @Success      200 {object} LoginResponse
+// @Failure      400 {object} ErrorResponse
+// @Router       /v1/auth/login [post]
 func (apiCfg *ApiConfig) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	godotenv.Load("../../.env")
@@ -106,6 +127,14 @@ func (apiCfg *ApiConfig) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	respondWithJSON(w, 200, "Login Successful")
 }
 
+// LogoutHandler godoc
+// @Summary      User logout
+// @Description  Invalidate the auth token and clear the cookie
+// @Tags         auth
+// @Produce      json
+// @Success      200 {object} LogoutResponse
+// @Failure      401 {object} ErrorResponse
+// @Router       /v1/auth/logout [post]
 func (apiCfg *ApiConfig) LogoutHandler(w http.ResponseWriter, r *http.Request, user database.User) {
 	tokenString, err := r.Cookie("token")
 	if err != nil {
@@ -132,6 +161,15 @@ func (apiCfg *ApiConfig) LogoutHandler(w http.ResponseWriter, r *http.Request, u
 	respondWithJSON(w, 200, "Logout successful")
 }
 
+// GetUserDetailsHandler godoc
+// @Summary      Get user details
+// @Description  Fetch the currently authenticated user's profile
+// @Tags         user
+// @Produce      json
+// @Success      200 {object} UserResponse
+// @Failure      400 {object} ErrorResponse
+// @Failure      401 {object} ErrorResponse
+// @Router       /v1/user/profile [get]
 func (apiCfg *ApiConfig) GetUserDetailsHandler(w http.ResponseWriter, r *http.Request, user database.User) {
 	userData, err := apiCfg.DB.GetUserById(r.Context(), user.ID)
 
@@ -142,6 +180,17 @@ func (apiCfg *ApiConfig) GetUserDetailsHandler(w http.ResponseWriter, r *http.Re
 	respondWithJSON(w, 200, databaseUserToUser(userData))
 }
 
+// UpdateUserHandler godoc
+// @Summary      Update user profile
+// @Description  Update username and email for the current user
+// @Tags         user
+// @Accept       json
+// @Produce      json
+// @Param        request body UpdateUserRequest true "Updated user info"
+// @Success      200 {object} UserResponse
+// @Failure      400 {object} ErrorResponse
+// @Failure      401 {object} ErrorResponse
+// @Router       /v1/user/update [put]
 func (apiCfg *ApiConfig) UpdateUserHandler(w http.ResponseWriter, r *http.Request, user database.User) {
 
 	type parameters struct {

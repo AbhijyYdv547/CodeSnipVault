@@ -1,0 +1,389 @@
+basePath: /v1
+definitions:
+  handler.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  handler.LoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  handler.LoginResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  handler.LogoutResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  handler.SignupRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  handler.Snippet:
+    properties:
+      code:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: string
+      language:
+        type: string
+      public:
+        type: boolean
+      share_id:
+        type: string
+      tags:
+        items:
+          type: string
+        type: array
+      title:
+        type: string
+      updated_at:
+        type: string
+      user_id:
+        type: string
+    type: object
+  handler.UpdateUserRequest:
+    properties:
+      email:
+        type: string
+      username:
+        type: string
+    type: object
+  handler.UserResponse:
+    properties:
+      email:
+        type: string
+      id:
+        type: string
+      username:
+        type: string
+    type: object
+  handler.parameters:
+    properties:
+      code:
+        type: string
+      language:
+        type: string
+      public:
+        type: boolean
+      tags:
+        items:
+          type: string
+        type: array
+      title:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: support@example.com
+    name: API Support
+    url: http://www.example.com/support
+  description: This is the backend API for CodeSnipVault
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  termsOfService: http://example.com/terms/
+  title: CodeSnipVault API
+  version: "1.0"
+paths:
+  /snippets:
+    get:
+      description: Get a paginated list of snippets filtered by search, tags, or language
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Search string
+        in: query
+        name: search
+        type: string
+      - description: Comma separated tags
+        in: query
+        name: tags
+        type: string
+      - description: Programming language
+        in: query
+        name: language
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              items:
+                $ref: '#/definitions/handler.Snippet'
+              type: array
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Get all snippets
+      tags:
+      - snippets
+    post:
+      consumes:
+      - application/json
+      description: Create a snippet belonging to the authenticated user
+      parameters:
+      - description: Snippet payload
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handler.parameters'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/handler.Snippet'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Create a new snippet
+      tags:
+      - snippets
+  /snippets/{id}:
+    delete:
+      description: Delete a snippet by ID belonging to the authenticated user
+      parameters:
+      - description: Snippet ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Snippet Deleted
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Delete a snippet
+      tags:
+      - snippets
+    get:
+      description: Get a snippet by ID belonging to the authenticated user
+      parameters:
+      - description: Snippet ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.Snippet'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Get a specific snippet
+      tags:
+      - snippets
+    put:
+      consumes:
+      - application/json
+      description: Update a snippet by ID belonging to the authenticated user
+      parameters:
+      - description: Snippet ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Snippet payload
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handler.parameters'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.Snippet'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Update a snippet
+      tags:
+      - snippets
+  /snippets/public/{share_id}:
+    get:
+      description: Get a snippet by public share ID
+      parameters:
+      - description: Share ID
+        in: path
+        name: share_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.Snippet'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Get a public snippet
+      tags:
+      - snippets
+  /v1/auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate a user and set an auth cookie
+      parameters:
+      - description: Login credentials
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handler.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.LoginResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: User login
+      tags:
+      - auth
+  /v1/auth/logout:
+    post:
+      description: Invalidate the auth token and clear the cookie
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.LogoutResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: User logout
+      tags:
+      - auth
+  /v1/auth/signup:
+    post:
+      consumes:
+      - application/json
+      description: Creates a new user account
+      parameters:
+      - description: Signup request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handler.SignupRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/handler.UserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Register a new user
+      tags:
+      - auth
+  /v1/user/profile:
+    get:
+      description: Fetch the currently authenticated user's profile
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.UserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Get user details
+      tags:
+      - user
+  /v1/user/update:
+    put:
+      consumes:
+      - application/json
+      description: Update username and email for the current user
+      parameters:
+      - description: Updated user info
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handler.UpdateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.UserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handler.ErrorResponse'
+      summary: Update user profile
+      tags:
+      - user
+swagger: "2.0"
