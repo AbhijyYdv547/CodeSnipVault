@@ -24,7 +24,8 @@ func routerHandler(r *chi.Mux, apiCfg *handler.ApiConfig) {
 		})
 
 		r.Route("/user", func(r chi.Router) {
-			r.Get("/", apiCfg.MiddlewareAuth(apiCfg.GetUserDetailsHandler))
+			r.Get("/profile", apiCfg.MiddlewareAuth(apiCfg.GetUserDetailsHandler))
+			r.Put("/update", apiCfg.MiddlewareAuth(apiCfg.UpdateUserHandler))
 		})
 
 	})

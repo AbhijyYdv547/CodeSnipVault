@@ -3,6 +3,7 @@ package handler
 import (
 	"backend/internal/database"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"os"
 	"time"
@@ -12,6 +13,7 @@ import (
 )
 
 func (apiCfg *ApiConfig) SignupHandler(w http.ResponseWriter, r *http.Request) {
+
 	type parameters struct {
 		Username string `json:"username"`
 		Email    string `json:"email"`
@@ -138,4 +140,34 @@ func (apiCfg *ApiConfig) GetUserDetailsHandler(w http.ResponseWriter, r *http.Re
 		return
 	}
 	respondWithJSON(w, 200, databaseUserToUser(userData))
+}
+
+func (apiCfg *ApiConfig) UpdateUserHandler(w http.ResponseWriter, r *http.Request, user database.User) {
+
+	type parameters struct {
+		Username string `json:"username"`
+		Email    string `json:"email"`
+	}
+
+	decoder := json.NewDecoder(r.Body)
+
+	params := parameters{}
+	err := decoder.Decode(&params)
+	if err != nil {
+		respondWithError(w, 400, fmt.Sprintf("Error parsing JSON: %v", err))
+		return
+	}
+
+	updatedUser, err := apiCfg.DB.UpdateUser(r.Context(), database.UpdateUserParams{
+		Username: params.Username,
+		Email:    params.Email,
+		ID:       user.ID,
+	})
+
+	if err != nil {
+		respondWithError(w, 400, fmt.Sprintf("Error updating user: %v", err))
+		return
+	}
+
+	respondWithJSON(w, 200, databaseUserToUser(updatedUser))
 }
