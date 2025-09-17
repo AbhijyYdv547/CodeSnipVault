@@ -81,7 +81,7 @@ func (apiCfg *ApiConfig) SignupHandler(w http.ResponseWriter, r *http.Request) {
 // @Router       /v1/auth/login [post]
 func (apiCfg *ApiConfig) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	godotenv.Load("../../.env")
+	godotenv.Load()
 	type parameters struct {
 		Email    string `json:"email"`
 		Password string `json:"password"`
