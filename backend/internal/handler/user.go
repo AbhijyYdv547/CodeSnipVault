@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"os"
 	"time"
 
 	"github.com/joho/godotenv"
@@ -120,8 +119,8 @@ func (apiCfg *ApiConfig) LoginHandler(w http.ResponseWriter, r *http.Request) {
 		Value:    tokenString,
 		Expires:  time.Now().Add(30 * time.Minute),
 		HttpOnly: true,
-		Secure:   os.Getenv("ENV") == "production",
-		SameSite: http.SameSiteStrictMode,
+		SameSite: http.SameSiteNoneMode,
+		Secure:   true,
 		Path:     "/",
 	})
 	respondWithJSON(w, 200, "Login Successful")
