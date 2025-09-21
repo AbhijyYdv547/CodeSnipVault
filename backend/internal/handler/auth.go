@@ -13,16 +13,24 @@ import (
 	"github.com/joho/godotenv"
 )
 
-func getSecret() []byte {
+func getSecret() ([]byte, error) {
 	_ = godotenv.Load()
 	secret := os.Getenv("JWT_SECRET")
 	if secret == "" {
-		log.Fatal("JWT_SECRET is not found in the .env")
+		return nil, fmt.Errorf("JWT_SECRET is not found in the .env")
 	}
-	return []byte(secret)
+	return []byte(secret), nil
 }
 
-var secretKey = getSecret()
+var secretKey []byte
+
+func init()  {
+	var err error
+	secretKey, err = getSecret()
+	if err != nil{
+		log.Fatalf("Failed to load secret: %v", err)
+	}
+}
 
 type authedHandler func(http.ResponseWriter, *http.Request, database.User)
 
