@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestGetSecret(t *testing.T){
+func TestGetSecret(t *testing.T) {
 	os.Setenv("JWT_SECRET", "test-secret")
 	for i := 0; i < 3; i++ {
 		secret, err := getSecret()
@@ -18,6 +18,6 @@ func TestGetSecret(t *testing.T){
 	}
 }
 
-func TestCreateToken(t *testing.T)  {
-	
+func TestCreateToken(t *testing.T) {
+
 }

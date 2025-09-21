@@ -24,10 +24,10 @@ func getSecret() ([]byte, error) {
 
 var secretKey []byte
 
-func init()  {
+func init() {
 	var err error
 	secretKey, err = getSecret()
-	if err != nil{
+	if err != nil {
 		log.Fatalf("Failed to load secret: %v", err)
 	}
 }

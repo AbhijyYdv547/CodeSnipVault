@@ -107,11 +107,21 @@ docker-compose up --build
 
 ## Roadmap
 
+### Completed
+
 * [X] Frontend authentication pages
 * [X] Hook auth pages to endpoints
 * [X] Snippet dashboard 
 * [X] Snippet Editor
 * [X] Hook Dashboard and editor to endpoints
 * [X] Public snippet sharing
+
+### Planned
+* [ ] Add unit tests
+* [ ] Add integration tests
 * [ ] Deployment with CI/CD
+
+## Contribution
+
+Feel free to fork the repository, make improvements, or suggest features via pull requests.
 
