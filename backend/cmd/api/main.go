@@ -52,7 +52,9 @@ func gracefulShutdown(apiServer *http.Server, done chan bool) {
 }
 
 func main() {
-	godotenv.Load()
+	if os.Getenv("ENV") != "production" {
+		godotenv.Load()
+	}
 
 	portString := os.Getenv("PORT")
 	if portString == "" {
@@ -64,6 +66,18 @@ func main() {
 		log.Fatal("DB_URL is not found in the .env")
 	}
 
+	jwtSecret := os.Getenv("JWT_SECRET")
+	if jwtSecret == "" {
+		log.Fatal("JWT_SECRET is not set")
+	}
+
+	frontendURL := os.Getenv("FRONTEND_URL")
+	if frontendURL == "" {
+		log.Fatal("FRONTEND_URL is not set")
+	}
+
+	backendURL := os.Getenv("BACKEND_URL")
+
 	conn, err := sql.Open("postgres", dbURL)
 	if err != nil {
 		log.Fatal("Can't connect to database")
@@ -71,7 +85,10 @@ func main() {
 
 	db := database.New(conn)
 	apiCfg := &handler.ApiConfig{
-		DB: db,
+		DB:          db,
+		JWTSecret:   []byte(jwtSecret),
+		FrontendURL: frontendURL,
+		BackendURL:  backendURL,
 	}
 
 	r := server.GetApi(apiCfg)

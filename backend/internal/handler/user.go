@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/joho/godotenv"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -80,7 +79,7 @@ func (apiCfg *ApiConfig) SignupHandler(w http.ResponseWriter, r *http.Request) {
 // @Router       /v1/auth/login [post]
 func (apiCfg *ApiConfig) LoginHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	godotenv.Load()
+
 	type parameters struct {
 		Email    string `json:"email"`
 		Password string `json:"password"`
@@ -108,7 +107,7 @@ func (apiCfg *ApiConfig) LoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tokenString, err := createToken(user.ID)
+	tokenString, err := apiCfg.createToken(user.ID)
 	if err != nil {
 		respondWithError(w, 400, "Some error occured")
 		return
@@ -119,8 +118,8 @@ func (apiCfg *ApiConfig) LoginHandler(w http.ResponseWriter, r *http.Request) {
 		Value:    tokenString,
 		Expires:  time.Now().Add(30 * time.Minute),
 		HttpOnly: true,
-		SameSite: http.SameSiteNoneMode,
-		Secure:   true,
+		SameSite: http.SameSiteLaxMode,
+		Secure:   false,
 		Path:     "/",
 	})
 	respondWithJSON(w, 200, "Login Successful")
@@ -142,7 +141,7 @@ func (apiCfg *ApiConfig) LogoutHandler(w http.ResponseWriter, r *http.Request, u
 	}
 	token := tokenString.Value
 
-	_, err = verifyToken(token)
+	_, err = apiCfg.verifyToken(token)
 	if err != nil {
 		respondWithError(w, http.StatusUnauthorized, "Wrong Auth Token")
 		return

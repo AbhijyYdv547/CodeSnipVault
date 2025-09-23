@@ -3,34 +3,12 @@ package handler
 import (
 	"backend/internal/database"
 	"fmt"
-	"log"
 	"net/http"
-	"os"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
-	"github.com/joho/godotenv"
 )
-
-func getSecret() ([]byte, error) {
-	_ = godotenv.Load()
-	secret := os.Getenv("JWT_SECRET")
-	if secret == "" {
-		return nil, fmt.Errorf("JWT_SECRET is not found in the .env")
-	}
-	return []byte(secret), nil
-}
-
-var secretKey []byte
-
-func init() {
-	var err error
-	secretKey, err = getSecret()
-	if err != nil {
-		log.Fatalf("Failed to load secret: %v", err)
-	}
-}
 
 type authedHandler func(http.ResponseWriter, *http.Request, database.User)
 
@@ -43,7 +21,7 @@ func (apiCfg *ApiConfig) MiddlewareAuth(handler authedHandler) http.HandlerFunc 
 		}
 		token := tokenString.Value
 
-		userId, err := verifyToken(token)
+		userId, err := apiCfg.verifyToken(token)
 		if err != nil {
 			respondWithError(w, http.StatusUnauthorized, "Invalid token")
 			return
@@ -59,14 +37,14 @@ func (apiCfg *ApiConfig) MiddlewareAuth(handler authedHandler) http.HandlerFunc 
 	}
 }
 
-func createToken(userId uuid.UUID) (string, error) {
+func (apicfg *ApiConfig) createToken(userId uuid.UUID) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256,
 		jwt.MapClaims{
 			"userId": userId,
 			"exp":    time.Now().Add(30 * time.Minute).Unix(),
 		})
 
-	tokenString, err := token.SignedString(secretKey)
+	tokenString, err := token.SignedString(apicfg.JWTSecret)
 	if err != nil {
 		return "", err
 	}
@@ -74,14 +52,15 @@ func createToken(userId uuid.UUID) (string, error) {
 	return tokenString, nil
 }
 
-func verifyToken(tokenString string) (uuid.UUID, error) {
+func (apiCfg *ApiConfig) verifyToken(tokenString string) (uuid.UUID, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		return secretKey, nil
+		return apiCfg.JWTSecret, nil
 	})
 
 	if err != nil || !token.Valid {
 		return uuid.Nil, fmt.Errorf("invalid token")
 	}
+
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
 		return uuid.Nil, fmt.Errorf("invalid token claims")
