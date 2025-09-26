@@ -126,9 +126,14 @@ const AccountDetails = () => {
                       </FormItem>
                     )}
                   />
-
-                  <Button type="submit" className="w-[50%]">
-                    Change Information
+                  <Button
+                    type="submit"
+                    className="w-[50%]"
+                    disabled={form.formState.isSubmitting}
+                  >
+                    {form.formState.isSubmitting
+                      ? "Changing Information..."
+                      : "Change Information"}
                   </Button>
                 </form>
               </Form>
