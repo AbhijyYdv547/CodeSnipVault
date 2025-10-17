@@ -140,44 +140,53 @@ docker-compose up --build
 <details>
 <summary>Landing Page</summary>
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/b196a58f-ea42-4a21-ae72-efc9195722e7" width="600"/>
-
+  <img src="https://github.com/user-attachments/assets/86057e03-54c0-4854-a477-4e99cf1ef17e" width="600"/>
 </p>
 </details>
 
 <details>
 <summary>Login and Signup Pages</summary>
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/1c417ff5-10d9-40fa-af42-53cc10b5eaa4" width="300"/>
-  <img src="https://github.com/user-attachments/assets/8f30ba45-bbb1-42e5-8264-1bf9b01fae50" width="300"/>
+  <img src="https://github.com/user-attachments/assets/fe625e65-99ef-4b1c-bbfa-94a76a7ef83f" width="300"/>
+  <img src="https://github.com/user-attachments/assets/eed84c50-dc37-4587-a5c4-a8572fa87daf" width="300"/>
+ 
 </p>
 </details>
 
 <details>
 <summary>Snippet Dashboard</summary>
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/7d27a918-34ca-47c9-a5e1-5422172fd7a6" width="600"/>
+  <img src="https://github.com/user-attachments/assets/f0cd3ca9-bd52-47f4-84df-367d3a06559f" width="600"/>
+
 </p>
 </details>
 
 <details>
 <summary>Snippet Generation Page</summary>
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/dfe9f277-f5f3-4f23-9702-1704797a3238" width="600"/>
+  <img src="https://github.com/user-attachments/assets/90396d19-1e24-49f9-b8d5-ab2aba536f84" width="600"/>  
 </p>
 </details>
 
 <details>
 <summary>Snippet Updation</summary>
 <p align="center">
-<img src="https://github.com/user-attachments/assets/925768e3-9aac-4a45-aac6-0ac0fa2a2490" width="600" />
+<img src="https://github.com/user-attachments/assets/c2385c32-c415-4a61-97a9-ec33328198c0" width="600" />
+</p>
+</details>
+
+<details>
+<summary>Snippet Share Page</summary>
+<p align="center">
+<img src="https://github.com/user-attachments/assets/7ffcb893-ddd2-4bd7-a413-f1429c9eb619" width="600" />  
 </p>
 </details>
 
 <details>
 <summary>User Profile Page</summary>
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/d0b74dbf-ef90-471d-b9d7-c0fe71195d1a" width="600"/>
+  <img src="https://github.com/user-attachments/assets/8a7f7a57-7721-4ec3-9836-c455ef5aae7e" width="600"/>
+  
 </p>
 </details>
 
